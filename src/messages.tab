@@ -518,7 +518,7 @@ static  const char *  replies[] = {
 /* 494 ERR_OWNMODE, */          "%s :cannot answer you while you are %s, your message was not sent",
 /* 495 ERR_KICKNOREJOIN */       ":%s 495 %s %s :Cannot rejoin channel so soon after being kicked (+J set)",
 /* 496 */       NULL,
-/* 497 */       NULL,
+/* 497 ERR_CANTDEOPTHEOP */       ":%s 497 %s %s :Cannot remove modes from users with or above your access",
 /* 498 */       NULL,
 /* 499 */       NULL,
 /* 500 */       NULL,
