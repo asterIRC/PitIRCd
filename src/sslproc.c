@@ -389,7 +389,7 @@ ssl_process_dead_fd(ssl_ctl_t * ctl, ssl_ctl_buf_t * ctl_buf)
 	if(IsAnyServer(client_p) || IsRegistered(client_p))
 	{
 		/* read any last moment ERROR, QUIT or the like -- jilles */
-		if (!strcmp(reason, "Remote host closed the connection"))
+		if (!strcmp(reason, "Read error: Error on disconnect from client"))
 			read_packet(client_p->localClient->F, client_p);
 		if (IsAnyDead(client_p))
 			return;
