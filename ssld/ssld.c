@@ -173,7 +173,7 @@ static void mod_write_ctl(rb_fde_t *, void *data);
 static void conn_plain_read_cb(rb_fde_t *fd, void *data);
 static void conn_plain_read_shutdown_cb(rb_fde_t *fd, void *data);
 static void mod_cmd_write_queue(mod_ctl_t * ctl, const void *data, size_t len);
-static const char *remote_closed = "Remote host closed the connection";
+static const char *remote_closed = "Read error: Error on disconnect from client";
 static int ssl_ok;
 #ifdef HAVE_LIBZ
 static int zlib_ok = 1;
