@@ -1925,7 +1925,7 @@ error_exit_client(struct Client *client_p, int error)
 	}
 
 	if(error == 0)
-		rb_strlcpy(errmsg, "Remote host closed the connection", sizeof(errmsg));
+		rb_strlcpy(errmsg, "Read error: Error on disconnect from client", sizeof(errmsg));
 	else
 		rb_snprintf(errmsg, sizeof(errmsg), "Read error: %s", strerror(current_error));
 
