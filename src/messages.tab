@@ -505,7 +505,7 @@ static  const char *  replies[] = {
 /* 481 ERR_NOPRIVILEGES, */	":Permission Denied - You're not an IRC operator",
 /* 482 ERR_CHANOPRIVSNEEDED, */ ":%s 482 %s %s :You're not a channel operator",
 /* 483 ERR_CANTKILLSERVER, */   ":You can't kill a server!",
-/* 484 ERR_ISCHANSERVICE */     ":%s 484 %s %s %s :Cannot kick or deop a network service",
+/* 484 ERR_ISCHANSERVICE */     ":%s 484 %s %s %s :Cannot kick or modify a network service",
 /* 485 ERR_BANNEDNICK, */	NULL,
 /* 486 ERR_NONONREG */          "%s :You must log in with services to message this user",
 /* 487 */       NULL,
