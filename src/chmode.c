@@ -1079,6 +1079,16 @@ chm_owner(struct Client *source_p, struct Channel *chptr,
                          */
                 }
 
+                if(chptr->mode.mode & MODE_PARANOID)
+				{
+					if(MyClient(source_p) && is_owner(targ_p))
+					{
+						//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+						sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+						return;
+					}
+				}
+
                 if(MyClient(source_p) && IsService(targ_p))
 				{
 					sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
@@ -1097,7 +1107,7 @@ chm_owner(struct Client *source_p, struct Channel *chptr,
                 mode_changes[mode_count++].client = targ_p;
 
                 mstptr->flags |= CHFL_OWNER;
-        }
+        		}
         else
         {
                 if(MyClient(source_p) && IsService(targ_p))
@@ -1106,6 +1116,16 @@ chm_owner(struct Client *source_p, struct Channel *chptr,
                                    me.name, source_p->name, targ_p->name, chptr->chname);
                         return;
                 }
+
+                if(chptr->mode.mode & MODE_PARANOID)
+				{
+					if(MyClient(source_p) && is_owner(targ_p))
+					{
+						//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+						sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+						return;
+					}
+				}
 
                 mode_changes[mode_count].letter = c;
                 mode_changes[mode_count].dir = MODE_DEL;
@@ -1205,6 +1225,23 @@ chm_admin(struct Client *source_p, struct Channel *chptr,
 			return;
 		}
 
+		//Don't deop other ops that are admins or above. --blindsight
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_owner(targ_p))
+			{
+				//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+				sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+				return;
+			}
+			if(MyClient(source_p) && is_admin(targ_p))
+			{
+					//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+					sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+					return;
+			}
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1224,6 +1261,23 @@ chm_admin(struct Client *source_p, struct Channel *chptr,
 			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
 				   me.name, source_p->name, targ_p->name, chptr->chname);
 			return;
+		}
+
+		//Don't deop other ops that are admins or above. --blindsight
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_owner(targ_p))
+			{
+				//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+				sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+				return;
+			}
+			if(MyClient(source_p) && is_admin(targ_p))
+			{
+					//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+					sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+					return;
+			}
 		}
 
 		mode_changes[mode_count].letter = c;
@@ -1316,6 +1370,16 @@ chm_op(struct Client *source_p, struct Channel *chptr,
 			return;
 		}
 
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_chanop(targ_p))
+			{
+			//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+			sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+			return;
+			}
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1335,6 +1399,16 @@ chm_op(struct Client *source_p, struct Channel *chptr,
 			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
 				   me.name, source_p->name, targ_p->name, chptr->chname);
 			return;
+		}
+
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_chanop(targ_p))
+			{
+			//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+			sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+			return;
+			}
 		}
 
 		mode_changes[mode_count].letter = c;
@@ -1436,6 +1510,16 @@ chm_halfop(struct Client *source_p, struct Channel *chptr,
 			return;
 		}
 
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_halfop(targ_p))
+			{
+			//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+			sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+			return;
+			}
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1455,6 +1539,16 @@ chm_halfop(struct Client *source_p, struct Channel *chptr,
 			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
 				   me.name, source_p->name, targ_p->name, chptr->chname);
 			return;
+		}
+
+		if(chptr->mode.mode & MODE_PARANOID)
+		{
+			if(MyClient(source_p) && is_halfop(targ_p))
+			{
+			//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+			sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+			return;
+			}
 		}
 
 		mode_changes[mode_count].letter = c;
@@ -2047,7 +2141,7 @@ struct ChannelMode chmode_table[256] =
   {chm_simple, MODE_REGONLY },		/* r */
   {chm_simple,	MODE_SECRET },		/* s */
   {chm_simple,	MODE_TOPICLIMIT },	/* t */
-  {chm_nosuch,	0 },			/* u */
+  {chm_nosuch,	0 },			/* u */ /*chm_simple,	MODE_PARANOID*/
   {chm_voice,	0 },			/* v */
   {chm_nosuch,	0 },			/* w */
   {chm_ban,	CHFL_QUIET },			/* x */
