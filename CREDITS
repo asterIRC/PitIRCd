@@ -1,14 +1,27 @@
 $Id: CREDITS 3133 2007-01-21 15:38:16Z jilles $
+ 
+FIRCd is a fork of the elemental-ircd project created to meet
+GeeksIRC's needs and keep the now-defunct ShadowIRCD project's goals
+alive with features used in modern IRCd's.
+ 
+The FIRCd team is listed in nick-alphabetical order:
+ 
+Blindsight, Matthew Ullman <matt -at- fircd.org>
+Ryan, Ryan H. <Ryan -at- rkhtech.org>>
+
+-----
 
 elemental-ircd is a fork of the ShadowIRCD project created to meet
 PonyChat's needs and keep the now-defunct ShadowIRCD project's goals
 alive.
-
+ 
 The elemental-ircd team is listed in nick-alphabetical order:
-
+ 
 aji, Alex Iadicico <alex -at- ajitek.net>
+lyska, Sam Dodrill <shadowh511 -at- gmail.com>>
 Kabaka, Kyle Johnson <kabaka -at- ponychat.net>
-Niichan, Sam Dodrill <niichan -at- ponychat.net>
+ 
+-----
 
 ShadowIRCd 6 is a modern restart of the old ShadowIRCd project
 based on Charybdis with a few additional features to make it appeal 
@@ -22,10 +35,14 @@ Taros, Brett Greenham <taros34 -at- hotmail.com>
  
 Some ShadowIRCd 6 features such as the oper-override and remote
 RESTART, DIE and MOD* commands were borrowed from ircd-seven.
- 
+
+-----
+
 ircd-seven is written by:
  
 spb, Stephen Bennett <spb -at- attenuate.org>
+ 
+----- 
  
 Charybdis started as an evolution from ircd-ratbox. Its development
 is led by a team of dedicated developers who have put a lot of time
@@ -54,5 +71,5 @@ ThaPrince, Jon Christopherson <jon -at- vile.com>
 twincest, River Tarnell <river -at- attenuate.org>
 w00t, Robin Burchell <surreal.w00t -at- gmail.com>
  
-Visit the ShadowIRCd website at: http://www.shadowircd.net
-Visit us on IRC at: irc.thinstack.net #shadowircd
+Visit the FIRCd repo at: http://www.bitbucket.com/mullman/fircd
+Visit us on IRC at: irc.geeksirc.net #fircd
