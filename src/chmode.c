@@ -1079,6 +1079,13 @@ chm_owner(struct Client *source_p, struct Channel *chptr,
                          */
                 }
 
+                if(MyClient(source_p) && IsService(targ_p))
+				{
+					sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+				  			 me.name, source_p->name, targ_p->name, chptr->chname);
+					return;
+				}
+
                 mode_changes[mode_count].letter = c;
                 mode_changes[mode_count].dir = MODE_ADD;
                 mode_changes[mode_count].caps = 0;
@@ -1191,6 +1198,13 @@ chm_admin(struct Client *source_p, struct Channel *chptr,
 			*/
 		}
 
+		if(MyClient(source_p) && IsService(targ_p))
+		{
+			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+		  			 me.name, source_p->name, targ_p->name, chptr->chname);
+			return;
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1293,6 +1307,13 @@ chm_op(struct Client *source_p, struct Channel *chptr,
 			if(!override)
 				return;
 			*/
+		}
+
+		if(MyClient(source_p) && IsService(targ_p))
+		{
+			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+		  			 me.name, source_p->name, targ_p->name, chptr->chname);
+			return;
 		}
 
 		mode_changes[mode_count].letter = c;
@@ -1408,6 +1429,13 @@ chm_halfop(struct Client *source_p, struct Channel *chptr,
 			*/
 		}
 
+		if(MyClient(source_p) && IsService(targ_p))
+		{
+			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+		  			 me.name, source_p->name, targ_p->name, chptr->chname);
+			return;
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1502,6 +1530,14 @@ chm_voice(struct Client *source_p, struct Channel *chptr,
 
 	if(dir == MODE_ADD)
 	{
+
+		if(MyClient(source_p) && IsService(targ_p))
+			{
+				sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+			  			 me.name, source_p->name, targ_p->name, chptr->chname);
+				return;
+			}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_ADD;
 		mode_changes[mode_count].caps = 0;
@@ -1516,6 +1552,13 @@ chm_voice(struct Client *source_p, struct Channel *chptr,
 	}
 	else
 	{
+		if(MyClient(source_p) && IsService(targ_p))
+			{
+				sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+			  			 me.name, source_p->name, targ_p->name, chptr->chname);
+				return;
+			}
+
 		mode_changes[mode_count].letter = 'v';
 		mode_changes[mode_count].dir = MODE_DEL;
 		mode_changes[mode_count].caps = 0;
