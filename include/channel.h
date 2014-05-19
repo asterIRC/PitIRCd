@@ -196,6 +196,7 @@ typedef int (*ExtbanFunc)(const char *data, struct Client *client_p,
 #define CHFL_EXCEPTION  0x20000000	/* exception to ban channel flag */
 #define CHFL_INVEX      0x40000000
 #define CHFL_QUIET      0x80000000
+#define MODE_PARANOID	0x160000000	/* paranoid mode, disallows deopping ops, etc. */
 
 /* mode flags for direction indication */
 #define MODE_QUERY     0
