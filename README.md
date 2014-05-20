@@ -1,6 +1,8 @@
 FIRCd v1.0.3-dev - Fork Created by Matthew Ullman (Blindsight)  2014 - Matt@FIRCd.org
 ===========================================================================
 
+** This IRCd is still in it's beta stages and is not ready for production use! **
+
 ** NOTE FOR THOSE WHO DON'T READ DOCS **
 
 - Reading INSTALL is now a must, as the old DPATH is now specified when configure is run.
