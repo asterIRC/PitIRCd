@@ -80,7 +80,7 @@ int user_modes[256] = {
 	0,			/* L */
 	0,			/* M */
 	0,			/* N */
-	0,			/* O */
+	UMODE_HELPER,			/* O */
 	0,			/* P */
 	UMODE_NOFORWARD,	/* Q */
 	UMODE_REGONLYMSG,	/* R */
