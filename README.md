@@ -1,7 +1,7 @@
-FIRCd v1.0.3-dev - Fork Created by Matthew Ullman (Blindsight)  2014 - Matt@FIRCd.org
+FIRCd v1.0.7-alpha - Fork Created by Matthew Ullman (Blindsight)  2014 - Matt@FIRCd.org
 ===========================================================================
 
-** This IRCd is still in it's beta stages and is not ready for production use! **
+** This IRCd is still in it's alpha stages and is not ready for production use! **
 
 ** NOTE FOR THOSE WHO DON'T READ DOCS **
 
