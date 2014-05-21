@@ -150,7 +150,7 @@ construct_cflag_param_string(void)
 
 	*cflagsparaminfo = '\0';
 	rb_snprintf(cflagsparaminfo, sizeof cflagsparaminfo, "%s%sb%s%s%s%sklov%s%s",
-                        ConfigChannel.use_owner ? "y" : "",
+                        ConfigChannel.use_owner ? "q" : "",
 			ConfigChannel.use_admin ? "a" : "",
 			ConfigChannel.use_except ? "e" : "",
 			ConfigChannel.use_forward ? "f" : "",
@@ -385,7 +385,7 @@ pretty_mask(const char *idmask)
 	{
 		mask_pos += rb_sprintf(mask_buf + mask_pos, "%s", mask) + 1;
 		t = mask_buf + old_mask_pos + 1;
-		if (*t == '&')
+		if (*t == '!')
 			*t = '~';
 		if (*t == '~')
 			t++;
@@ -401,7 +401,7 @@ pretty_mask(const char *idmask)
 		if(*t != '\0')
 			host = t;
 
-		if((t = strchr(mask, '&')) != NULL)
+		if((t = strchr(mask, '!')) != NULL)
 		{
 			ex = t;
 			*t++ = '\0';
@@ -416,7 +416,7 @@ pretty_mask(const char *idmask)
 				user = mask;
 		}
 	}
-	else if((t = strchr(mask, '&')) != NULL)
+	else if((t = strchr(mask, '!')) != NULL)
 	{
 		ex = t;
 		*t++ = '\0';
@@ -452,14 +452,14 @@ pretty_mask(const char *idmask)
 		he = host[HOSTLEN];
 		host[HOSTLEN] = '\0';
 	}
-
+	
 	mask_pos += rb_sprintf(mask_buf + mask_pos, "%s!%s@%s", nick, user, host) + 1;
 
 	/* restore mask, since we may need to use it again later */
 	if(at)
 		*at = '@';
 	if(ex)
-		*ex = '&';
+		*ex = '!';
 	if(ne)
 		nick[NICKLEN - 1] = ne;
 	if(ue)
