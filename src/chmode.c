@@ -516,6 +516,32 @@ fix_key_remote(char *arg)
 	return arg;
 }
 
+/**
+ * Check if user's access (alevel) meets required (rlevel) access and checks
+ * for override. If not sends the error message ERR_CHANOPRIVSNEEDED and adds
+ * SM_ERR_NOOPS to *errors
+ * 
+ * @returns 1 if access is met, 0 if not
+ */
+int chk_access(long rlevel, struct Client *source_p, struct Channel *chptr,
+	       int *override, int *errors, long alevel)
+{
+	if(alevel & rlevel)
+		return 1;
+	
+	if(IsOverride(source_p)) {
+		*override = 1;
+		return 1;
+	}
+	
+	if(!(*errors & SM_ERR_NOOPS))
+		sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
+			   me.name, source_p->name, chptr->chname);
+		*errors |= SM_ERR_NOOPS;
+	
+	return 0;
+}
+
 /* chm_*()
  *
  * The handlers for each specific mode.
@@ -541,19 +567,8 @@ chm_simple(struct Client *source_p, struct Channel *chptr,
 	struct Metadata *md;
 	struct DictionaryIter iter;
 	
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if (IsOverride(source_p))
-			override = 1;
-		else
-		{
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(MyClient(source_p) && (++mode_limit_simple > MAXMODES_SIMPLE))
 		return;
@@ -752,19 +767,8 @@ chm_staff(struct Client *source_p, struct Channel *chptr,
 		return;
 	}
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if (IsOverride(source_p))
-			override = 1;
-		else
-		{
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(MyClient(source_p) && (++mode_limit_simple > MAXMODES_SIMPLE))
 		return;
@@ -918,20 +922,8 @@ chm_ban(struct Client *source_p, struct Channel *chptr,
 		return;
 	}
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(MyClient(source_p) && (++mode_limit > MAXMODEPARAMS))
 		return;
@@ -1304,20 +1296,9 @@ chm_op(struct Client *source_p, struct Channel *chptr,
 	struct Client *targ_p;
 	int override = 0;
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access((CHFL_CHANOP|CHFL_ADMIN|CHFL_OWNER), source_p, chptr,
+		       &override, errors, alevel))
+		return;
 
 	if((dir == MODE_QUERY) || (parc <= *parn))
 		return;
@@ -1444,20 +1425,9 @@ chm_halfop(struct Client *source_p, struct Channel *chptr,
 		return;
 	}
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access((CHFL_CHANOP|CHFL_ADMIN|CHFL_OWNER), source_p, chptr,
+		       &override, errors, alevel))
+		return;
 
 	if((dir == MODE_QUERY) || (parc <= *parn))
 		return;
@@ -1575,20 +1545,9 @@ chm_voice(struct Client *source_p, struct Channel *chptr,
 	struct Client *targ_p;
 	int override = 0;
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
 
 	if((dir == MODE_QUERY) || parc <= *parn)
 		return;
@@ -1677,19 +1636,8 @@ chm_limit(struct Client *source_p, struct Channel *chptr,
 	int limit;
 	int override = 0;
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(dir == MODE_QUERY)
 		return;
@@ -1744,20 +1692,8 @@ chm_throttle(struct Client *source_p, struct Channel *chptr,
 	int joins = 0, timeslice = 0;
 	int override = 0;
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(dir == MODE_QUERY)
 		return;
@@ -1836,19 +1772,8 @@ chm_forward(struct Client *source_p, struct Channel *chptr,
 	}
 
 #ifndef FORWARD_OPERONLY
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 #else
 	if(!IsOper(source_p) && !IsServer(source_p))
 	{
@@ -1941,19 +1866,8 @@ chm_key(struct Client *source_p, struct Channel *chptr,
 	char *key;
 	int override = 0;
 
-	if(alevel != CHFL_CHANOP && alevel != CHFL_ADMIN && alevel != CHFL_HALFOP && alevel != CHFL_OWNER)
-	{
-		if(IsOverride(source_p))
-			override = 1;
-		else
-		{
-			if(!(*errors & SM_ERR_NOOPS))
-				sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
-						me.name, source_p->name, chptr->chname);
-			*errors |= SM_ERR_NOOPS;
-			return;
-		}
-	}
+	if(!chk_access(ONLY_CHANOPS, source_p, chptr, &override, errors, alevel))
+		return;
 
 	if(dir == MODE_QUERY)
 		return;

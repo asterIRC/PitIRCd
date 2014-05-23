@@ -82,6 +82,9 @@ extern void chm_voice(struct Client *source_p, struct Channel *chptr,
 	   int alevel, int parc, int *parn,
 	   const char **parv, int *errors, int dir, char c, long mode_type);
 
+extern int chk_access(long rlevel, struct Client *source_p, struct Channel *chptr,
+		      int *override, int *errors, long alevel);
+
 extern unsigned int cflag_add(char c, ChannelModeFunc function);
 extern void cflag_orphan(char c);
 extern void construct_cflags_strings(void);
