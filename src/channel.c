@@ -270,7 +270,7 @@ is_owner(struct membership *msptr)
 {
         if(!ConfigChannel.use_owner)
                 return 0;
-        if(is_chmode_y(msptr))
+        if(is_chmode_q(msptr))
                 return 1;
         else
                 return 0;
@@ -306,6 +306,36 @@ is_chanop_voiced(struct membership *msptr)
 		return 0;
 }
 
+/* can_ownerop()
+ *
+ * input	- two memeberships
+ * output	- 1 if the first memebership can kick/deop the second, 0 elsewise
+ * side effects -
+ */
+ int
+ is_ownerop(struct membership *msptr)
+ {
+ 	if(is_owner(msptr) && is_chanop(msptr))
+ 		return 1;
+ 	else
+ 		return 0;
+ }
+
+ /* can_ownerop()
+ *
+ * input	- two memeberships
+ * output	- 1 if the first memebership can kick/deop the second, 0 elsewise
+ * side effects -
+ */
+ int
+ is_adminop(struct membership *msptr)
+ {
+ 	if(is_admin(msptr) && is_chanop(msptr))
+ 		return 1;
+ 	else
+ 		return 0;
+ }
+
 /* can_kick_deop()
  *
  * input	- two memeberships
@@ -337,6 +367,10 @@ can_kick_deop(struct membership *source, struct membership *target)
                 return 0;
         if(is_halfop(source) && is_any_op(target))
                 return 0;
+        if(is_chanop(source) && is_adminop(target))
+        		return 0;
+        if(is_chanop(source) && is_ownerop(target))
+        		return 0;
         if(!is_any_op(source))
                 return 0;
 
