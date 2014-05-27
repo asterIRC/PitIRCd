@@ -1272,6 +1272,25 @@ chm_admin(struct Client *source_p, struct Channel *chptr,
 			}
 		}
 
+		if(((mstptr->flags & CHFL_OWNER && alevel & ~(CHFL_OWNER)))
+			&& MyClient(source_p) && !IsService(source_p))
+		{
+			if(IsOverride(source_p))
+			{
+				override = 1;
+			} else {
+				if(!(*errors & SM_ERR_NOOPS))
+				{
+					sendto_one(source_p,
+						   ":%s 482 %s %s :Cannot modify modes from users above your access.",
+						   me.name, source_p->name,
+						   chptr->chname);
+					*errors |= SM_ERR_NOOPS;
+				}
+				return;
+			}
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_DEL;
 		mode_changes[mode_count].caps = 0;
@@ -1386,9 +1405,29 @@ chm_op(struct Client *source_p, struct Channel *chptr,
 		{
 			if(MyClient(source_p) && is_chanop(targ_p))
 			{
-			//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
-			sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
-			return;
+				//sendto_one(source_p, form_str(ERR_CANTDEOPTHEOP), me.name, source_p->name, targ_p->name, chptr->chname);
+				sendto_one(source_p, ":%s 482 %s %s :Cannot modify modes from users with or above your access. Paranoid mode enabled.", me.name, source_p->name, chptr->chname);
+				return;
+			}
+		}
+
+		if(((mstptr->flags & CHFL_ADMIN && alevel & ~(CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_OWNER && alevel & ~(CHFL_OWNER)))
+			&& MyClient(source_p) && !IsService(source_p))
+		{
+			if(IsOverride(source_p))
+			{
+				override = 1;
+			} else {
+				if(!(*errors & SM_ERR_NOOPS))
+				{
+					sendto_one(source_p,
+						   ":%s 482 %s %s :Cannot modify modes from users above your access.",
+						   me.name, source_p->name,
+						   chptr->chname);
+					*errors |= SM_ERR_NOOPS;
+				}
+				return;
 			}
 		}
 
@@ -1521,6 +1560,27 @@ chm_halfop(struct Client *source_p, struct Channel *chptr,
 			}
 		}
 
+		if(((mstptr->flags & CHFL_CHANOP && alevel & ~(CHFL_CHANOP|CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_ADMIN && alevel & ~(CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_OWNER && alevel & ~(CHFL_OWNER)))
+			&& MyClient(source_p) && !IsService(source_p))
+		{
+			if(IsOverride(source_p))
+			{
+				override = 1;
+			} else {
+				if(!(*errors & SM_ERR_NOOPS))
+				{
+					sendto_one(source_p,
+						   ":%s 482 %s %s :Cannot modify modes from users above your access.",
+						   me.name, source_p->name,
+						   chptr->chname);
+					*errors |= SM_ERR_NOOPS;
+				}
+				return;
+			}
+		}
+
 		mode_changes[mode_count].letter = c;
 		mode_changes[mode_count].dir = MODE_DEL;
 		mode_changes[mode_count].caps = 0;
@@ -1606,11 +1666,34 @@ chm_voice(struct Client *source_p, struct Channel *chptr,
 	else
 	{
 		if(MyClient(source_p) && IsService(targ_p))
+		{
+			sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
+				   me.name, source_p->name, targ_p->name,
+				   chptr->chname);
+			return;
+		}
+
+		if(((mstptr->flags & CHFL_HALFOP && alevel & ~(CHFL_HALFOP|CHFL_CHANOP|CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_CHANOP && alevel & ~(CHFL_CHANOP|CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_ADMIN && alevel & ~(CHFL_ADMIN|CHFL_OWNER))
+			|| (mstptr->flags & CHFL_OWNER && alevel & ~(CHFL_OWNER)))
+			&& MyClient(source_p) && !IsService(source_p))
+		{
+			if(IsOverride(source_p))
 			{
-				sendto_one(source_p, form_str(ERR_ISCHANSERVICE),
-			  			 me.name, source_p->name, targ_p->name, chptr->chname);
+				override = 1;
+			} else {
+				if(!(*errors & SM_ERR_NOOPS))
+				{
+					sendto_one(source_p,
+						   ":%s 482 %s %s :Cannot modify modes from users above your access.",
+						   me.name, source_p->name,
+						   chptr->chname);
+					*errors |= SM_ERR_NOOPS;
+				}
 				return;
 			}
+		}
 
 		mode_changes[mode_count].letter = 'v';
 		mode_changes[mode_count].dir = MODE_DEL;
@@ -2055,7 +2138,10 @@ struct ChannelMode chmode_table[256] =
   {chm_simple, MODE_REGONLY },		/* r */
   {chm_simple,	MODE_SECRET },		/* s */
   {chm_simple,	MODE_TOPICLIMIT },	/* t */
-  {chm_nosuch,	0 },			/* u */ /*chm_simple,	MODE_PARANOID*/
+  /*
+  {chm_simple,	MODE_PARANOID },
+  */
+  {chm_nosuch,  0 },			/* u */
   {chm_voice,	0 },			/* v */
   {chm_nosuch,	0 },			/* w */
   {chm_ban,	CHFL_QUIET },			/* x */
