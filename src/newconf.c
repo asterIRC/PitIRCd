@@ -202,6 +202,86 @@ conf_set_serverinfo_name(void *data)
 }
 
 static void
+conf_set_serverinfo_maskname(void *data)
+{
+	if(ServerInfo.mask_name == NULL)
+	{
+		const char *s;
+		int dots = 0;
+
+		for(s = data; *s != '\0'; s++)
+		{
+			if(!IsServChar(*s))
+			{
+				conf_report_error("Ignoring serverinfo::name "
+						  "-- bogus servername.");
+				return;
+			}
+			else if(*s == '.')
+				++dots;
+		}
+
+		if(!dots)
+		{
+			conf_report_error("Ignoring serverinfo::name -- must contain '.'");
+			return;
+		}
+
+		s = data;
+
+		if(IsDigit(*s))
+		{
+			conf_report_error("Ignoring serverinfo::name -- cannot begin with digit.");
+			return;
+		}
+
+		/* the ircd will exit() in main() if we dont set one */
+		if(strlen(s) <= HOSTLEN)
+			ServerInfo.name = rb_strdup((char *) data);
+	}
+}
+
+static void
+conf_set_serverinfo_maskdesc(void *data)
+{
+	if(ServerInfo.mask_desc == NULL)
+	{
+		const char *s;
+		int dots = 0;
+
+		for(s = data; *s != '\0'; s++)
+		{
+			if(!IsServChar(*s))
+			{
+				conf_report_error("Ignoring serverinfo::name "
+						  "-- bogus servername.");
+				return;
+			}
+			else if(*s == '.')
+				++dots;
+		}
+
+		if(!dots)
+		{
+			conf_report_error("Ignoring serverinfo::name -- must contain '.'");
+			return;
+		}
+
+		s = data;
+
+		if(IsDigit(*s))
+		{
+			conf_report_error("Ignoring serverinfo::name -- cannot begin with digit.");
+			return;
+		}
+
+		/* the ircd will exit() in main() if we dont set one */
+		if(strlen(s) <= HOSTLEN)
+			ServerInfo.name = rb_strdup((char *) data);
+	}
+}
+
+static void
 conf_set_serverinfo_sid(void *data)
 {
 	char *sid = data;
@@ -2148,6 +2228,9 @@ static struct ConfEntry conf_serverinfo_table[] =
 
 	{ "network_name", 	CF_QSTRING, conf_set_serverinfo_network_name,	0, NULL },
 	{ "name", 		CF_QSTRING, conf_set_serverinfo_name,	0, NULL },
+	{ "mask_name", 		CF_QSTRING, conf_set_serverinfo_maskname,	0, NULL },
+	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_maskdesc,	0, NULL },
+
 	{ "sid", 		CF_QSTRING, conf_set_serverinfo_sid,	0, NULL },
 	{ "vhost", 		CF_QSTRING, conf_set_serverinfo_vhost,	0, NULL },
 	{ "vhost6", 		CF_QSTRING, conf_set_serverinfo_vhost6,	0, NULL },
@@ -2338,6 +2421,7 @@ static struct ConfEntry conf_general_table[] =
 	{ "use_whois_actually", CF_YESNO, NULL, 0, &ConfigFileEntry.use_whois_actually	},
 	{ "warn_no_nline",	CF_YESNO, NULL, 0, &ConfigFileEntry.warn_no_nline	},
 	{ "hide_opers",		CF_YESNO, NULL, 0, &ConfigFileEntry.operhide		},
+	{ "mask_servers",		CF_YESNO, NULL, 0, &ConfigFileEntry.servermask		},
 	{ "use_propagated_bans",CF_YESNO, NULL, 0, &ConfigFileEntry.use_propagated_bans	},
 	{ "expire_override_time",	CF_TIME, NULL, 0, &ConfigFileEntry.expire_override_time},
     { "away_interval",    CF_INT,   NULL, 0, &ConfigFileEntry.away_interval    },

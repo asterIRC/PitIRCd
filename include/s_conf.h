@@ -231,6 +231,7 @@ struct config_file_entry
 	int global_snotices;
 	int operspy_dont_care_user_info;
 	int operhide;
+	int servermask;
 	int use_propagated_bans;
 	int secret_channels_in_whois;
 	int expire_override_time;
@@ -288,8 +289,10 @@ struct config_server_hide
 struct server_info
 {
 	char *name;
+	char *mask_name;
 	char sid[4];
 	char *description;
+	char *mask_desc;
 	char *network_name;
 	char *network_desc;
 	char *helpchan;

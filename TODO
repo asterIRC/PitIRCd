@@ -1,12 +1,8 @@
-#Prevent operators and below from removing +o on founders and admins (the +o modes don't stick with admin & founder)
-
 #Fix bug on ban mask where users are able to do *!*!*!*!*@*
 
-#Strip permissions from +a to only have it as a protection from kick feature rather than a glorified +o
+#*MAYBE* Strip permissions from +a to only have it as a protection from kick feature rather than a glorified +o
 
 #Finish creating channel mode +u (paranoid mode)
-
-#Add in helper mode
 
 #Add in ability to mask servers from non-opers
 

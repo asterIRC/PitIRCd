@@ -46,8 +46,10 @@
 #define TS_WARN_DELTA_MIN     10	/* min value for ts_warn_delta */
 #define TS_WARN_DELTA_DEFAULT 30	/* default for ts_warn_delta */
 /* ServerInfo default values */
-#define NETWORK_NAME_DEFAULT "EFnet"	/* default for network_name */
-#define NETWORK_DESC_DEFAULT "Eris Free Network"	/* default for network_desc */
+#define NETWORK_NAME_DEFAULT "GeeksIRC"	/* default for network_name */
+#define NETWORK_DESC_DEFAULT "The GeeksIRC Network"	/* default for network_desc */
+#define SERVER_NAME_MASK_DEFAULT "*.example.net" /*The mask that you want to show in place of servers actual name opers can see actual servers */
+#define SERVER_DESC_MASK_DEFAULT "You're awesome IRC network!" /*The mask server description. It will look like a user is using *.example.net - You're awesome IRC network!. */
 /* General defaults */
 #define CLIENT_FLOOD_DEFAULT 20	/* default for client_flood */
 #define CLIENT_FLOOD_MAX     2000

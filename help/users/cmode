@@ -20,10 +20,10 @@ NO PARAMETERS:
      +c     - No color.  All color codes in messages are stripped.
      +d     - No nickchanges. People on the channel will not be able to
               change nick.
-     +g     - Free invite.  Everyone may invite users.  Significantly
-              weakens +i control.
      +z     - Op moderated.  Messages blocked by +m, +b and +q are instead
               sent to ops.
+     +A     - Free invite.  Everyone may invite users.  Significantly
+              weakens +i control.
    * +L     - Large ban list.  Increase maximum number of +beIq entries.
    * +P     - Permanent.  Channel does not disappear when empty.
      +F     - Free target.  Anyone may set forwards to this (otherwise
@@ -67,7 +67,7 @@ WITH PARAMETERS:
      +a     - Admin.  Grants channel administrator status.
               PARAMS: /mode #channel +a nick
      +q     - Owner.  Grants channel owner status.
-              PARAMS: /mode #channel +y nick
+              PARAMS: /mode #channel +q nick
      +b     - Ban.  Prevents a user from entering the channel, and from
               sending or changing nick if they are on it, based on a 
               nick!ident@host match.

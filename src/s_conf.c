@@ -675,6 +675,8 @@ set_default_conf(void)
 	ServerInfo.description = NULL;
 	ServerInfo.network_name = rb_strdup(NETWORK_NAME_DEFAULT);
 	ServerInfo.network_desc = rb_strdup(NETWORK_DESC_DEFAULT);
+	ServerInfo.mask_name = rb_strdup(SERVER_NAME_MASK_DEFAULT);
+	ServerInfo.mask_desc = rb_strdup(SERVER_DESC_MASK_DEFAULT);
 	ServerInfo.helpchan = rb_strdup("");
 	ServerInfo.helpurl = rb_strdup("");
 
@@ -822,6 +824,7 @@ set_default_conf(void)
 	ConfigFileEntry.throttle_count = 4;
 	ConfigFileEntry.throttle_duration = 60;
 	ConfigFileEntry.operhide = 0;
+	ConfigFileEntry.servermask = 0;
 	ConfigFileEntry.expire_override_time = 300;
 
 	ServerInfo.default_max_clients = MAXCONNECTIONS;

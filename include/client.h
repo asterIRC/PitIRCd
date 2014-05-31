@@ -444,6 +444,9 @@ struct ListClient
 #define SeesHelper(s, t)	(IsHelper(t) && (SeesOpers(s) || ((s) == (t))))
 #define SeesAnyOper(s, t)	(IsAnyOper(t) && (SeesOpers(s) || ((s) == (t))))
 
+/*Is this user an oper and can users see servers? */
+#define SeesServers(s)		(IsOper(s) || !ConfigFileEntry.servermask)
+
 /* overflow flags */
 /* EARLIER FLAGS ARE IN s_newconf.h */
 #define FLAGS2_EXEMPTRESV	0x00400000

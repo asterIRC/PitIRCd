@@ -32,6 +32,6 @@ h_sgo_umode_changed(void *vdata)
 
 	if (!(data->oldumodes & UMODE_OPER) && IsOper(source_p))
 		sendto_realops_snomask_from(SNO_GENERAL, L_ALL, source_p->servptr,
-				"%s (%s@%s) is now an operator",
+				"%s (%s@%s) is now an IRC operator",
 				source_p->name, source_p->username, source_p->host);
 }
