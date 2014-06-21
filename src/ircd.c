@@ -709,6 +709,10 @@ main(int argc, char *argv[])
 	}
 	rb_strlcpy(me.info, ServerInfo.description, sizeof(me.info));
 
+	/* Add in masks */
+	rb_strlcpy(me.info, ServerInfo.mask_desc, sizeof(me.info));
+	rb_strlcpy(me.info, ServerInfo.mask_name, sizeof(me.info));
+
 	if(ServerInfo.ssl_cert != NULL && ServerInfo.ssl_private_key != NULL)
 	{
 		/* just do the rb_setup_ssl_server to validate the config */

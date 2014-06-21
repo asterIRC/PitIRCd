@@ -98,6 +98,8 @@ mo_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 		{
 			if (strchr(user, '.'))
 				sendto_one_numeric(source_p, ERR_CANTKILLSERVER, form_str(ERR_CANTKILLSERVER));
+			else if (IsService(target_p))
+				sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
 			else
 				sendto_one_numeric(source_p, ERR_NOSUCHNICK,
 						   form_str(ERR_NOSUCHNICK), user);
@@ -220,6 +222,12 @@ ms_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 		return 0;
 	}
 
+	if(IsService(target_p))
+	{ 
+		sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
+		return 0;
+	}
+
 	if(MyConnect(target_p))
 	{
 		if(IsServer(source_p))
@@ -240,6 +248,12 @@ ms_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 	 */
 	if(IsOper(source_p))	/* send it normally */
 	{
+
+		if(IsService(target_p))
+			{ 
+			sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
+			return 0;
+			}
 		sendto_realops_snomask(IsService(source_p) ? SNO_SKILL : SNO_GENERAL, L_ALL,
 				     "Received KILL message for %s!%s@%s. From %s Path: %s!%s!%s!%s %s",
 				     target_p->name, target_p->username, target_p->orighost, source_p->name, 
@@ -267,6 +281,12 @@ ms_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 
 	/* FLAGS_KILLED prevents a quit being sent out */
 	target_p->flags |= FLAGS_KILLED;
+
+	if(IsService(target_p))
+	{ 
+		sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
+		return 0;
+	}
 
 	if (IsService(source_p))
 		rb_sprintf(buf, "%s", "Disconnected by services");
