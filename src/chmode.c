@@ -2086,7 +2086,7 @@ struct ChannelMode chmode_table[256] =
   {chm_nosuch,  0 },			/* 0x3f */
 
   {chm_nosuch,	0 },			/* @ */
-  {chm_simple,	MODE_FREEINVITE },	/* A */
+  {chm_nosuch,	0 },	/* A */
   {chm_nosuch,	0 },			/* B */
   {chm_simple,	MODE_NOCTCP },		/* C */
   {chm_simple,	MODE_NOACTION },	/* D */
@@ -2108,7 +2108,7 @@ struct ChannelMode chmode_table[256] =
   {chm_simple,	MODE_NONOTICE },	/* T */
   {chm_nosuch,	0 },			/* U */
   {chm_nosuch,	0 },			/* V */
-  {chm_nosuch,	0 },			/* W */
+  {chm_simple,	MODE_FREEINVITE },	/* W */
   {chm_nosuch,	0 },			/* X */
   {chm_nosuch,	0 },			/* Y */
   {chm_nosuch,	0 },			/* Z */
