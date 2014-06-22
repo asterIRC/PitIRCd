@@ -202,7 +202,7 @@ conf_set_serverinfo_name(void *data)
 }
 
 static void
-conf_set_serverinfo_maskname(void *data)
+conf_set_serverinfo_mask_name(void *data)
 {
 	if(ServerInfo.mask_name == NULL)
 	{
@@ -213,7 +213,7 @@ conf_set_serverinfo_maskname(void *data)
 		{
 			if(!IsServChar(*s))
 			{
-				conf_report_error("Ignoring serverinfo::name "
+				conf_report_error("Ignoring serverinfo::mask_name "
 						  "-- bogus servername.");
 				return;
 			}
@@ -223,7 +223,7 @@ conf_set_serverinfo_maskname(void *data)
 
 		if(!dots)
 		{
-			conf_report_error("Ignoring serverinfo::name -- must contain '.'");
+			conf_report_error("Ignoring serverinfo::mask_name -- must contain '.'");
 			return;
 		}
 
@@ -231,18 +231,18 @@ conf_set_serverinfo_maskname(void *data)
 
 		if(IsDigit(*s))
 		{
-			conf_report_error("Ignoring serverinfo::name -- cannot begin with digit.");
+			conf_report_error("Ignoring serverinfo::mask_name -- cannot begin with digit.");
 			return;
 		}
 
 		/* the ircd will exit() in main() if we dont set one */
 		if(strlen(s) <= HOSTLEN)
-			ServerInfo.name = rb_strdup((char *) data);
+			ServerInfo.masc_name = rb_strdup((char *) data);
 	}
 }
 
 static void
-conf_set_serverinfo_maskdesc(void *data)
+conf_set_serverinfo_mask_desc(void *data)
 {
 	if(ServerInfo.mask_desc == NULL)
 	{
@@ -253,18 +253,12 @@ conf_set_serverinfo_maskdesc(void *data)
 		{
 			if(!IsServChar(*s))
 			{
-				conf_report_error("Ignoring serverinfo::name "
+				conf_report_error("Ignoring serverinfo::mask_desc "
 						  "-- bogus servername.");
 				return;
 			}
 			else if(*s == '.')
 				++dots;
-		}
-
-		if(!dots)
-		{
-			conf_report_error("Ignoring serverinfo::name -- must contain '.'");
-			return;
 		}
 
 		s = data;
@@ -277,7 +271,7 @@ conf_set_serverinfo_maskdesc(void *data)
 
 		/* the ircd will exit() in main() if we dont set one */
 		if(strlen(s) <= HOSTLEN)
-			ServerInfo.name = rb_strdup((char *) data);
+			ServerInfo.mask_desc = rb_strdup((char *) data);
 	}
 }
 
@@ -2228,8 +2222,8 @@ static struct ConfEntry conf_serverinfo_table[] =
 
 	{ "network_name", 	CF_QSTRING, conf_set_serverinfo_network_name,	0, NULL },
 	{ "name", 		CF_QSTRING, conf_set_serverinfo_name,	0, NULL },
-	{ "mask_name", 		CF_QSTRING, conf_set_serverinfo_maskname,	0, NULL },
-	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_maskdesc,	0, NULL },
+	{ "mask_name", 		CF_QSTRING, conf_set_serverinfo_mask_name,	0, NULL },
+	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_maskd_esc,	0, NULL },
 
 	{ "sid", 		CF_QSTRING, conf_set_serverinfo_sid,	0, NULL },
 	{ "vhost", 		CF_QSTRING, conf_set_serverinfo_vhost,	0, NULL },

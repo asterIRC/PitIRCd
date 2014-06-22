@@ -362,6 +362,18 @@ static struct InfoStruct info_table[] = {
 		"Network description"
 	},
 	{
+		"mask_name",
+		OUTPUT_STRING,
+		&ServerInfo.mask_name,
+		"Name Mask"
+	},
+	{
+		"mask_desc",
+		OUTPUT_STRING,
+		&ServerInfo.mask_desc,
+		"Description Mask"
+	},
+	{
 		"autochanmodes",
 		OUTPUT_STRING,
 		&ConfigChannel.autochanmodes,
