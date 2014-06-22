@@ -237,7 +237,7 @@ conf_set_serverinfo_mask_name(void *data)
 
 		/* the ircd will exit() in main() if we dont set one */
 		if(strlen(s) <= HOSTLEN)
-			ServerInfo.masc_name = rb_strdup((char *) data);
+			ServerInfo.mask_name = rb_strdup((char *) data);
 	}
 }
 
@@ -2223,7 +2223,7 @@ static struct ConfEntry conf_serverinfo_table[] =
 	{ "network_name", 	CF_QSTRING, conf_set_serverinfo_network_name,	0, NULL },
 	{ "name", 		CF_QSTRING, conf_set_serverinfo_name,	0, NULL },
 	{ "mask_name", 		CF_QSTRING, conf_set_serverinfo_mask_name,	0, NULL },
-	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_maskd_esc,	0, NULL },
+	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_mask_desc,	0, NULL },
 
 	{ "sid", 		CF_QSTRING, conf_set_serverinfo_sid,	0, NULL },
 	{ "vhost", 		CF_QSTRING, conf_set_serverinfo_vhost,	0, NULL },
