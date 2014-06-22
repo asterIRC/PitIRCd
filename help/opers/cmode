@@ -80,7 +80,7 @@ WITH PARAMETERS:
               PARAMS: /mode #channel +b nick!user@host
      +x     - Quiet.  Prevents a user from sending to the channel or changing
               nick, based on a nick!ident@host match.
-              PARAMS: /mode #channel +q nick!user@host
+              PARAMS: /mode #channel +x nick!user@host
      +e     - Exempt.  Allows a user to join a channel and send to it even if
               they are banned (+b) or quieted (+q), based on a nick!ident@host
               match.
