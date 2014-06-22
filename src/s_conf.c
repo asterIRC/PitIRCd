@@ -1615,6 +1615,10 @@ clear_out_old_conf(void)
 	/* clean out ServerInfo */
 	rb_free(ServerInfo.description);
 	ServerInfo.description = NULL;
+	rb_free(ServerInfo.mask_name);
+	ServerInfo.mask_name = NULL;
+	rb_free(ServerInfo.mask_desc);
+	ServerInfo.mask_desc = NULL;
 	rb_free(ServerInfo.network_name);
 	ServerInfo.network_name = NULL;
 	rb_free(ServerInfo.network_desc);
