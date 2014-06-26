@@ -116,6 +116,12 @@ mo_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 		return 0;
 	}
 
+	if(IsService(target_p))
+	{ 
+		sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
+		return 0;
+	}
+
 	if(MyConnect(target_p))
 		sendto_one(target_p, ":%s!%s@%s KILL %s :%s",
 			   source_p->name, source_p->username, source_p->host,
