@@ -20,6 +20,7 @@ User modes: (* designates that the umode is oper only)
          +B     - Marks you as a bot in /whois.
          +C     - Prevents you from receiving CTCPs other than ACTION.
          +D     - Deaf - ignores all channel messages.
+         +I     - Hidden - Hides all channels you are in.
          +Q     - Prevents you from being affected by channel forwarding.
          +R     - Prevents non accept unidentified users from messaging you.
          +G     - "soft caller id" mode - same as +g but automatically allows
