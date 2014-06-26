@@ -66,6 +66,12 @@ DECLARE_MODULE_AV1(links, NULL, NULL, links_clist, links_hlist, NULL, "$Revision
 static int
 m_links(struct Client *client_p, struct Client *source_p, int parc, const char *parv[])
 {
+	if(ConfigFileEntry.links_oper_only)
+	{
+		m_not_oper(client_p, source_p, parc, parv);
+		return 0;
+	}
+	
 	if(ConfigServerHide.flatten_links && !IsExemptShide(source_p))
 		scache_send_flattened_links(source_p);
 	else
