@@ -316,8 +316,8 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
 	else
 	{
 		sendto_one_numeric(source_p, RPL_WHOISSERVER, form_str(RPL_WHOISSERVER),
-			   target_p->name, target_p->servptr->name, //This will eventually be the masked name
-			   target_p->servptr->info);
+			   target_p->name, source_p->servptr->mname,
+			   source_p->servptr->minfo);
 	}
 
 	if(target_p->user->away)

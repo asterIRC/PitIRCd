@@ -872,6 +872,12 @@ validate_conf(void)
 	if(ServerInfo.network_desc == NULL)
 		ServerInfo.network_desc = rb_strdup(NETWORK_DESC_DEFAULT);
 
+	if(ServerInfo.mask_name == NULL)
+		ServerInfo.mask_name = rb_strdup(SERVER_NAME_MASK_DEFAULT);
+
+	if(ServerInfo.mask_desc == NULL)
+		ServerInfo.mask_name = rb_strdup(SERVER_DESC_MASK_DEFAULT);
+
 	if(ServerInfo.ssld_count < 1)
 		ServerInfo.ssld_count = 1;
 

@@ -202,80 +202,6 @@ conf_set_serverinfo_name(void *data)
 }
 
 static void
-conf_set_serverinfo_mask_name(void *data)
-{
-	if(ServerInfo.mask_name == NULL)
-	{
-		const char *s;
-		int dots = 0;
-
-		for(s = data; *s != '\0'; s++)
-		{
-			if(!IsServChar(*s))
-			{
-				conf_report_error("Ignoring serverinfo::mask_name "
-						  "-- bogus servername.");
-				return;
-			}
-			else if(*s == '.')
-				++dots;
-		}
-
-		if(!dots)
-		{
-			conf_report_error("Ignoring serverinfo::mask_name -- must contain '.'");
-			return;
-		}
-
-		s = data;
-
-		if(IsDigit(*s))
-		{
-			conf_report_error("Ignoring serverinfo::mask_name -- cannot begin with digit.");
-			return;
-		}
-
-		/* the ircd will exit() in main() if we dont set one */
-		if(strlen(s) <= HOSTLEN)
-			ServerInfo.mask_name = rb_strdup((char *) data);
-	}
-}
-
-static void
-conf_set_serverinfo_mask_desc(void *data)
-{
-	if(ServerInfo.mask_desc == NULL)
-	{
-		const char *s;
-		int dots = 0;
-
-		for(s = data; *s != '\0'; s++)
-		{
-			if(!IsServChar(*s))
-			{
-				conf_report_error("Ignoring serverinfo::mask_desc "
-						  "-- bogus servername.");
-				return;
-			}
-			else if(*s == '.')
-				++dots;
-		}
-
-		s = data;
-
-		if(IsDigit(*s))
-		{
-			conf_report_error("Ignoring serverinfo::name -- cannot begin with digit.");
-			return;
-		}
-
-		/* the ircd will exit() in main() if we dont set one */
-		if(strlen(s) <= HOSTLEN)
-			ServerInfo.mask_desc = rb_strdup((char *) data);
-	}
-}
-
-static void
 conf_set_serverinfo_sid(void *data)
 {
 	char *sid = data;
@@ -2215,6 +2141,9 @@ remove_conf_item(const char *topconf, const char *name)
 static struct ConfEntry conf_serverinfo_table[] =
 {
 	{ "description", 	CF_QSTRING, NULL, 0, &ServerInfo.description	},
+	/* We can get away without checking the masks as they are purely aesthetic. If it looks weird, it's your fault */
+	{ "mask_desc", 		CF_QSTRING, NULL, 0, &ServerInfo.mask_desc	},
+	{ "mask_name", 		CF_QSTRING, NULL, 0, &ServerInfo.mask_name	},
 	{ "network_desc", 	CF_QSTRING, NULL, 0, &ServerInfo.network_desc	},
 	{ "helpchan",		CF_QSTRING, NULL, 0, &ServerInfo.helpchan		},
 	{ "helpurl",		CF_QSTRING, NULL, 0, &ServerInfo.helpurl		},
@@ -2222,8 +2151,6 @@ static struct ConfEntry conf_serverinfo_table[] =
 
 	{ "network_name", 	CF_QSTRING, conf_set_serverinfo_network_name,	0, NULL },
 	{ "name", 		CF_QSTRING, conf_set_serverinfo_name,	0, NULL },
-	{ "mask_name", 		CF_QSTRING, conf_set_serverinfo_mask_name,	0, NULL },
-	{ "mask_desc", 		CF_QSTRING, conf_set_serverinfo_mask_desc,	0, NULL },
 
 	{ "sid", 		CF_QSTRING, conf_set_serverinfo_sid,	0, NULL },
 	{ "vhost", 		CF_QSTRING, conf_set_serverinfo_vhost,	0, NULL },
