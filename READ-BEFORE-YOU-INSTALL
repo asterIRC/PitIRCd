@@ -1,0 +1,49 @@
+                        FIRCd INSTALL Document (Must read!)
+
+                 Copyright (c) 2014 by FIRCd development team
+
+     ----------------------------------------------------------------------
+
+     I will write this first because it is VERY VERY IMPORTANT. When you define
+     your services in ircd.conf 
+     (example)
+     		service {
+			name = "services.whatever.net";
+			name = "extended.whatever.net";
+			name = "stats.whatever.net";
+			};
+	 (/example)
+	 %%%YOU MUST ALSO DEFINE YOUR SERVICES/COPY THAT BLOCK IN ALL OTHER ircd.conf LEAVES AND HUBS.
+	 IF YOU DON'T YOUR IRCd ***WILL*** SEG FAULT. SO DO IT.%%%
+
+     ----------------------------------------------------------------------
+
+     					Quick Install (under 5 minutes)
+
+     	Before you start to compile your new IRCd, just follow these simple steps
+     	and you will have your server up and running in minutes without problems.
+
+     	1. Add a new user for the ircd. Just simple do: adduser ircd
+     	2. Use your account as your new user (e.x. ircd) by doing: su ircd
+     	3. Now you should be using your system as the new user. Type: cd ~ 
+     	to go in to your new user's home directory.
+     	4. Now that you are in your users home directory, simple do a weget
+     	to download the ircd. Example: wget http://example.com/fircd.zip
+     	5. Now that you have your new IRCd downloaded, if the file is a .zip
+     	run unzip file.zip or if it is a .tar.gz then simply do tar -zxvf file.tar.gz
+     	6. Now that you have uncompressed the folder, enter the new folder that was 
+     	created. example: cd FIRCd-master
+     	7. Now that you are in the folder, it's time to compile. For the quickest 
+     	way, just enter in this command: ./configure && make && make install
+     	This will compile the ircd and install it in your users home directory.
+     	i.e. /home/ircd/ircd
+     	8. You're almost done! Go back to your home directory, cd ~ , and enter
+     	ircd/etc and modify example.conf. (You can use nano or ftp to modify it).
+     	9. After you have modified the example.conf file, change the file name 
+     	to ircd.conf.
+     	10. Alright! Now that you have set you ircd.conf, simple go to ~/ircd/bin
+     	and ./ircd to start it!
+
+     	Notes* You may use reference.conf for references on what each paramter does.
+
+     ----------------------------------------------------------------------
