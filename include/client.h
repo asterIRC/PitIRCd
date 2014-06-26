@@ -428,6 +428,7 @@ struct ListClient
 #define UMODE_NOINVITE	   0x0800	/* block invites */
 #define UMODE_BOT	   0x8000	/* mark as a bot in whois */
 #define UMODE_SCALLERID    0x40000	/* soft caller id */
+#define UMODE_HIDECHANS	   0x80000	/* hide channels from whois */
 
 /* user information flags, only settable by remote mode or local oper */
 #define UMODE_OPER         0x1000	/* Operator */
@@ -547,6 +548,7 @@ struct ListClient
 #define IsSetNoInvite(x)	((x)->umodes & UMODE_NOINVITE)
 #define IsSetBot(x)		((x)->umodes & UMODE_BOT)
 #define IsSetSCallerId(x)	((x)->umodes & UMODE_SCALLERID)
+#define IsHideChans(x)		((x)->umodes & UMODE_HIDECHANS)
 
 #define SetGotId(x)             ((x)->flags |= FLAGS_GOTID)
 #define IsGotId(x)              (((x)->flags & FLAGS_GOTID) != 0)

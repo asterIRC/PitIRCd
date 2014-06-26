@@ -284,6 +284,11 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
 			chptr = msptr->chptr;
 
 			visible = ShowChannel(source_p, chptr);
+			if(source_p->umodes & ~(UMODE_SERVICE|UMODE_OVERRIDE|
+ 				UMODE_OPER|UMODE_ADMIN|UMODE_HELPER)
+ 			   && IsHideChans(target_p)
+ 			   && !IsMember(source_p, chptr))
+ 				visible = 0;
 
 			if(visible || operspy || showsecret)
 			{
