@@ -186,11 +186,11 @@ find_channel_status(struct membership *msptr, int combine)
 
 	p = buffer;
 
-        if(is_owner(msptr))
-        {
-                if(!combine)
-                        return "~";
-                *p++ = '~';
+    if(is_owner(msptr))
+    {
+        if(!combine)
+            return "~";
+            *p++ = '~';
         }
 	if(is_admin(msptr))
 	{
@@ -211,6 +211,64 @@ find_channel_status(struct membership *msptr, int combine)
 		if(!combine)
 			return "%";
 		*p++ = '%';
+	}
+
+	if(is_voiced(msptr))
+		*p++ = '+';
+
+	*p = '\0';
+	return buffer;
+}
+
+/* find_channel_status_whois()
+ *
+ * input	- membership to get status for, whether we can combine flags
+ * output	- flags of user on channel
+ * side effects -
+ * note, duplicated incase this conflicts with other files
+ * it's also messy and unorganized... but it's 5AM and im lazy.
+ */
+const char *
+find_channel_status_whois(struct membership *msptr, int combine)
+{
+	static char buffer[1];
+	char *p;
+
+	p = buffer;
+
+    if(is_owner(msptr))
+    {
+        if(!combine)
+            return "~";
+        *p++ = '~';
+        *p = '\0';
+		return buffer;
+    }
+	if(is_admin(msptr))
+	{
+		if(!combine)
+			return "&";
+		*p++ = '&';
+		*p = '\0';
+		return buffer;
+	}
+
+	if(is_chanop(msptr))
+	{
+		if(!combine)
+			return "@";
+		*p++ = '@';
+		*p = '\0';
+		return buffer;
+	}
+
+	if(is_halfop(msptr))
+	{
+		if(!combine)
+			return "%";
+		*p++ = '%';
+		*p = '\0';
+		return buffer;
 	}
 
 	if(is_voiced(msptr))

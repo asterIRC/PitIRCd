@@ -290,6 +290,9 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
  			   && !IsMember(source_p, chptr))
  				visible = 0;
 
+ 			if(IsOper(source_p) && IsHideChans(target_p))
+ 				visible = ShowChannel(source_p, chptr);
+
 			if(visible || operspy || showsecret)
 			{
 				if((cur_len + strlen(chptr->chname) + 3) > (BUFSIZE - 5))
@@ -301,7 +304,7 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
 
 				tlen = rb_sprintf(t, "%s%s%s ",
 						visible ? "" : "*",
-						find_channel_status(msptr, 1),
+						find_channel_status_whois(msptr, 1),
 						chptr->chname);
 				t += tlen;
 				cur_len += tlen;
