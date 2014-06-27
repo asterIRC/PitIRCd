@@ -233,6 +233,7 @@ struct config_file_entry
 	int operspy_dont_care_user_info;
 	int operhide;
 	int servermask;
+	int mask_service_kill;
 	int use_propagated_bans;
 	int secret_channels_in_whois;
 	int expire_override_time;

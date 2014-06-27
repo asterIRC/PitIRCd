@@ -450,8 +450,11 @@ struct ListClient
 #define SeesHelper(s, t)	(IsHelper(t) && (SeesOpers(s) || ((s) == (t))))
 #define SeesAnyOper(s, t)	(IsAnyOper(t) && (SeesOpers(s) || ((s) == (t))))
 
-/*Is this user an oper and can users see servers? */
+/* Is this user an oper and can users see servers? */
 #define SeesServers(s)		(IsOper(s) || !ConfigFileEntry.servermask)
+
+/* Show the regular kill for services or the mask kill? */
+#define MaskServiceKill	(ConfigFileEntry.mask_service_kill)
 
 /* overflow flags */
 /* EARLIER FLAGS ARE IN s_newconf.h */

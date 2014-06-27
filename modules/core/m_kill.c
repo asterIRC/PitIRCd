@@ -295,7 +295,10 @@ ms_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 	}
 
 	if (IsService(source_p))
+		if(MaskServiceKill)
 		rb_sprintf(buf, "%s", "Disconnected by services");
+		else
+		rb_sprintf(buf, "Killed (%s %s)", source_p->name, reason);
 	else
 		rb_sprintf(buf, "Killed (%s %s)", source_p->name, reason);
 

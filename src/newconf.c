@@ -2344,6 +2344,7 @@ static struct ConfEntry conf_general_table[] =
 	{ "warn_no_nline",	CF_YESNO, NULL, 0, &ConfigFileEntry.warn_no_nline	},
 	{ "hide_opers",		CF_YESNO, NULL, 0, &ConfigFileEntry.operhide		},
 	{ "mask_servers",		CF_YESNO, NULL, 0, &ConfigFileEntry.servermask		},
+	{ "mask_service_kills",		CF_YESNO, NULL, 0, &ConfigFileEntry.mask_service_kill		},
 	{ "use_propagated_bans",CF_YESNO, NULL, 0, &ConfigFileEntry.use_propagated_bans	},
 	{ "expire_override_time",	CF_TIME, NULL, 0, &ConfigFileEntry.expire_override_time},
     { "away_interval",    CF_INT,   NULL, 0, &ConfigFileEntry.away_interval    },
