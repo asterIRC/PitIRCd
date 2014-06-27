@@ -98,8 +98,6 @@ mo_kill(struct Client *client_p, struct Client *source_p, int parc, const char *
 		{
 			if (strchr(user, '.'))
 				sendto_one_numeric(source_p, ERR_CANTKILLSERVER, form_str(ERR_CANTKILLSERVER));
-			else if (IsService(target_p))
-				sendto_one_numeric(source_p, ERR_CANTKILLSERVICE, form_str(ERR_CANTKILLSERVICE));
 			else
 				sendto_one_numeric(source_p, ERR_NOSUCHNICK,
 						   form_str(ERR_NOSUCHNICK), user);
