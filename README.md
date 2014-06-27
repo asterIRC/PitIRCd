@@ -16,7 +16,7 @@ FIRCd v1.1.7 - Fork Created by Matt Ullman (Blindsight)  2014 - Matt@FIRCd.org
 
 - See the INSTALL document for info on configuring and compiling FIRCd
 
-- SUPPORTED PLATFORMS: this code should compile without any warnings on:
+- SUPPORTED PLATFORMS: this code should compile on:
     - FreeBSD 6.x/7.x/8.x
     - Gentoo & Gentoo Hardened ~x86/~amd64/~fbsd
     - Fedora 8/9 / CentOS 4/5 / Redhat Enterprise 5
