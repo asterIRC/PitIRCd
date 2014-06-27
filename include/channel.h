@@ -244,6 +244,7 @@ extern int can_join(struct Client *source_p, struct Channel *chptr, char *key);
 
 extern struct membership *find_channel_membership(struct Channel *, struct Client *);
 extern const char *find_channel_status(struct membership *msptr, int combine);
+extern const char *find_channel_status_whois(struct membership *msptr, int combine);
 extern int is_halfop(struct membership *msptr);
 extern int is_admin(struct membership *msptr);
 extern int is_owner(struct membership *msptr);
