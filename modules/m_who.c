@@ -480,7 +480,7 @@ do_who(struct Client *source_p, struct Client *target_p, struct membership *mspt
 		sendto_one(source_p, form_str(RPL_WHOREPLY), me.name,
 		   source_p->name, msptr ? msptr->chptr->chname : "*",
 		   target_p->username, target_p->host,
-		   source_p->servptr->mname, target_p->name, status,
+		   ServerInfo.mask_name, target_p->name, status,
 		   ConfigServerHide.flatten_links && !IsOper(source_p) && !IsExemptShide(source_p) ? 0 : target_p->hopcount, 
 		   target_p->info);
 	else
@@ -508,7 +508,7 @@ do_who(struct Client *source_p, struct Client *target_p, struct membership *mspt
 		if (fmt->fields & FIELD_SERVER)
 			append_format(str, sizeof str, &pos, " %s", target_p->servptr->name);
 		} else {
-			append_format(str, sizeof str, &pos, " %s", source_p->servptr->mname);
+			append_format(str, sizeof str, &pos, " %s", ServerInfo.mask_name);
 		}
 		if (fmt->fields & FIELD_NICK)
 			append_format(str, sizeof str, &pos, " %s", target_p->name);
