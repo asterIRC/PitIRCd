@@ -315,7 +315,12 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
 	if(cur_len > mlen + extra_space)
 		sendto_one(source_p, "%s", buf);
 
-	if(SeesServers(source_p))
+	/* Apply the mask if they can't see servers, or if they are not the 
+	 * person they are whoising. Because what sense does it make that
+	 * they cant see the own server they are on? 
+	 * --blindsight
+	 */
+	if(SeesServers(source_p) || source_p == target_p)
 	{
 		sendto_one_numeric(source_p, RPL_WHOISSERVER, form_str(RPL_WHOISSERVER),
 			   target_p->name, target_p->servptr->name,
