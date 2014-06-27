@@ -8,10 +8,6 @@ FIRCd v1.1.7 - Fork Created by Matt Ullman (Blindsight)  2014 - Matt@FIRCd.org
 
 ** OTHER NOTES **
 
-- FIRCd does not compile on FreeBSD as there is an OpenSSL link error. If you know the fix to this,
-- please open it up as a pull request and a new version will be released. Currently the only way to
-- get it installed on FreeBSD is if you ./configure --disable-openssl
-
 - Files recommended for reading: INSTALL | READ-BEFORE-YOU-INSTALL
 
 - To report bugs in FIRCd, or to talk with the developers visit us at irc.geeksirc.net #FIRCd
@@ -21,6 +17,7 @@ FIRCd v1.1.7 - Fork Created by Matt Ullman (Blindsight)  2014 - Matt@FIRCd.org
 - See the INSTALL document for info on configuring and compiling FIRCd
 
 - SUPPORTED PLATFORMS: this code should compile without any warnings on:
+    - FreeBSD 6.x/7.x/8.x
     - Gentoo & Gentoo Hardened ~x86/~amd64/~fbsd
     - Fedora 8/9 / CentOS 4/5 / Redhat Enterprise 5
     - Debian Etch/Lenny/Squeeze
@@ -30,6 +27,7 @@ FIRCd v1.1.7 - Fork Created by Matt Ullman (Blindsight)  2014 - Matt@FIRCd.org
     - Solaris 10 sparc.
 
 - TESTED PLATFORMS:  The code has been tested on the following platforms, and is known to run properly.
+    - FreeBSD 6.x/7.x/8.x
     - Linux glibc-2.6, glibc-2.7, glibc-2.8, glibc-2.10, glibc-2.11
     - Solaris 2.6/7/8
     - OpenBSD 2.8

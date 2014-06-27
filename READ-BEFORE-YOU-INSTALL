@@ -47,3 +47,10 @@
      	Notes* You may use reference.conf for references on what each paramter does.
 
      ----------------------------------------------------------------------
+
+                                Note for FreeBSD users!
+
+     In our testing, we were unable to get openssl to work with FIRCd. If you have a fix
+     for this issue, please open it up as a pull request so we may pull it in to the repo.
+
+     ----------------------------------------------------------------------
