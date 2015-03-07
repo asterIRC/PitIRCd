@@ -2060,8 +2060,8 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 				continue;
 			}
 
-			if(ConfigChannel.admin_on_channel_create && ConfigChannel.use_admin)
-				flags = CHFL_ADMIN | CHFL_CHANOP;
+			if(ConfigChannel.admin_on_channel_create && ConfigChannel.use_owner)
+				flags = CHFL_OWNER | CHFL_CHANOP;
 			else
 				flags = CHFL_CHANOP;
 		}
