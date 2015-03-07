@@ -2186,10 +2186,11 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 				      use_id(source_p), (long) chptr->channelts,
 				      chptr->chname);
 			struct Metadata *md;
+			struct membership *founderptr = find_channel_membership(chptr, source_p);
 			md = channel_metadata_find(chptr, "FOUNDER");
 			if (md != NULL) {
 				if (!irccmp(source_p->user->suser, md->value)) {
-					flags |= CHFL_OWNER | CHFL_CHANOP;
+					founderptr->flags |= CHFL_OWNER | CHFL_CHANOP;
 					sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
 						      ":%s TMODE %ld %s +qo %s %s",
 						      use_id(&me), (long) chptr->channelts,
