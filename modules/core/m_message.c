@@ -847,7 +847,7 @@ msg_client(int p_or_n, const char *command,
 			if (IsOper(source_p))
 			{
 				rb_snprintf(text3, sizeof(text3), "O%s", source_p->id);
-				DICTIONARY_FOREACH(md, &iter, target_p->user->metadata)
+				DICTIONARY_FOREACH(md, &iter, target_p->metadata)
 				{
 					if(!strcmp(md->value, "OACCEPT") && !strcmp(md->name, text3))
 					{

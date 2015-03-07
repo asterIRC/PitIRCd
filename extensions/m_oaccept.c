@@ -42,7 +42,7 @@ mo_oaccept(struct Client *client_p, struct Client *source_p, int parc, const cha
 
 	/* Provide a nice error message if you try to OACCEPT someone
 	 * who you've already OACCEPTed. */
-	DICTIONARY_FOREACH(md, &iter, target_p->user->metadata)
+	DICTIONARY_FOREACH(md, &iter, target_p->metadata)
 	{
 		if(!strcmp(md->value, "OACCEPT") && !strcmp(md->name, text))
 		{

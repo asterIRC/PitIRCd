@@ -117,7 +117,6 @@ struct Client
 	struct Server *serv;	/* ...defined, if this is a server */
 	struct Client *servptr;	/* Points to server this Client is on */
 	struct Client *from;	/* == self, if Local Client, *NEVER* NULL! */
-
 	struct Whowas *whowas;	/* Pointers to whowas structs */
 	time_t tsinfo;		/* TS on the nick, SVINFO on server */
 	unsigned int umodes;	/* opers, normal users subset */
@@ -168,6 +167,8 @@ struct Client
 
 	time_t large_ctcp_sent; /* ctcp to large group sent, relax flood checks */
 	char *certfp; /* client certificate fingerprint */
+
+	struct Dictionary *metadata;
 };
 
 struct LocalUser

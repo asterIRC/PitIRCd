@@ -113,6 +113,7 @@ struct ConfItem
 #define CONF_FLAGS_NEED_SASL		0x00040000
 #define CONF_FLAGS_ENCRYPTED            0x00200000
 #define CONF_FLAGS_EXEMPTDNSBL		0x04000000
+#define CONF_FLAGS_SPOOF_WEBCHAT		0x08000000
 
 
 /* Macros for struct ConfItem */
@@ -129,6 +130,7 @@ struct ConfItem
 #define IsConfExemptJupe(x)	((x)->flags & CONF_FLAGS_EXEMPTJUPE)
 #define IsConfExemptResv(x)	((x)->flags & CONF_FLAGS_EXEMPTRESV)
 #define IsConfDoSpoofIp(x)      ((x)->flags & CONF_FLAGS_SPOOF_IP)
+#define IsConfDoSpoofWebchat(x)      ((x)->flags & CONF_FLAGS_SPOOF_WEBCHAT)
 #define IsConfSpoofNotice(x)    ((x)->flags & CONF_FLAGS_SPOOF_NOTICE)
 #define IsConfEncrypted(x)      ((x)->flags & CONF_FLAGS_ENCRYPTED)
 #define IsNeedSasl(x)		((x)->flags & CONF_FLAGS_NEED_SASL)

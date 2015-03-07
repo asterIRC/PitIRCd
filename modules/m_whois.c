@@ -350,6 +350,8 @@ single_whois(struct Client *source_p, struct Client *target_p, int operspy)
 		if((md = user_metadata_find(target_p, "SWHOIS")) != NULL)
 			sendto_one_numeric(source_p, 320, "%s :%s", target_p->name, md->value);
 	}
+	if((md = user_metadata_find(target_p, "WEBIRCNAME")) != NULL)
+		sendto_one_numeric(source_p, 320, "%s :is using CGI:IRC %s", target_p->name, md->value);
 
 	if(IsSSLClient(target_p))
 		sendto_one_numeric(source_p, RPL_WHOISSECURE, form_str(RPL_WHOISSECURE),

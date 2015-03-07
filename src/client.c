@@ -145,6 +145,7 @@ make_client(struct Client *from)
 {
 	struct Client *client_p = NULL;
 	struct LocalUser *localClient;
+	struct Dictionary *metadata;
 
 	client_p = rb_bh_alloc(client_heap);
 
@@ -164,12 +165,16 @@ make_client(struct Client *from)
 
 		/* as good a place as any... */
 		rb_dlinkAdd(client_p, &client_p->localClient->tnode, &unknown_list);
+		metadata = irc_dictionary_create(irccmp);
+		client_p->metadata = metadata;
 	}
 	else
 	{			/* from is not NULL */
 		client_p->localClient = NULL;
 		client_p->preClient = NULL;
 		client_p->from = from;	/* 'from' of local client is self! */
+		metadata = irc_dictionary_create(irccmp);
+		client_p->metadata = metadata;
 	}
 	
 	SetUnknown(client_p);
@@ -1669,9 +1674,6 @@ make_user(struct Client *client_p)
 		user = (struct User *) rb_bh_alloc(user_heap);
 		user->refcnt = 1;
 		client_p->user = user;
-
-		metadata = irc_dictionary_create(irccmp);
-		client_p->user->metadata = metadata;
 	}
 	return user;
 }
@@ -1952,9 +1954,9 @@ user_metadata_add(struct Client *target, const char *name, const char *value, in
 	md->name = rb_strdup(name);
 	md->value = rb_strdup(value);
 
-	irc_dictionary_add(target->user->metadata, md->name, md);
+	irc_dictionary_add(target->metadata, md->name, md);
 	
-	if(propegate)
+	if(propegate && target->user != NULL)
 		sendto_match_servs(&me, "*", CAP_ENCAP, NOCAPS, "ENCAP * METADATA ADD %s %s :%s",
 				target->id, name, value);
 
@@ -1978,11 +1980,11 @@ user_metadata_delete(struct Client *target, const char *name, int propegate)
 	if(!md)
 		return;
 
-	irc_dictionary_delete(target->user->metadata, md->name);
+	irc_dictionary_delete(target->metadata, md->name);
 
 	rb_free(md);
 
-	if(propegate)
+	if(propegate && target->user != NULL)
 		sendto_match_servs(&me, "*", CAP_ENCAP, NOCAPS, "ENCAP * METADATA DELETE %s %s",
 				target->id, name);
 }
@@ -1998,13 +2000,10 @@ user_metadata_delete(struct Client *target, const char *name, int propegate)
 struct Metadata *
 user_metadata_find(struct Client *target, const char *name)
 {
-	if(!target->user)
+	if(!target->metadata)
 		return NULL;
 
-	if(!target->user->metadata)
-		return NULL;
-
-	return irc_dictionary_retrieve(target->user->metadata, name);
+	return irc_dictionary_retrieve(target->metadata, name);
 }
 /*
  * user_metadata_clear
@@ -2019,7 +2018,7 @@ user_metadata_clear(struct Client *target)
 	struct Metadata *md;
 	struct DictionaryIter iter;
 	
-	DICTIONARY_FOREACH(md, &iter, target->user->metadata)
+	DICTIONARY_FOREACH(md, &iter, target->metadata)
 	{
 		user_metadata_delete(target, md->name, 0);
 	}

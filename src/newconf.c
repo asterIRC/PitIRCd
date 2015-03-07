@@ -1133,6 +1133,26 @@ conf_set_auth_spoof(void *data)
 		*p = '@';
 	}
 
+	/* Webchat */
+	if((p = strchr(host, '&')) != NULL)
+	{
+		*p = '\0';
+		host = p+1;
+
+		if(!valid_username(host))
+		{
+			conf_report_error("Warning -- Invalid WebIRC spoof");
+			return;
+		}
+
+		/* this must be restored! */
+		*p = '&';
+		rb_free(yy_aconf->info.name);
+		yy_aconf->info.name = rb_strdup(data);
+		yy_aconf->flags |= CONF_FLAGS_SPOOF_WEBCHAT;
+		return;
+	}
+
 	if(EmptyString(host))
 	{
 		conf_report_error("Warning -- spoof host empty.");

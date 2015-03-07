@@ -90,7 +90,7 @@ mr_webirc(struct Client *client_p, struct Client *source_p, int parc, const char
 				client_p->localClient->ip.ss_family, NULL);
 	if (aconf == NULL || !(aconf->status & CONF_CLIENT))
 		return 0;
-	if (!IsConfDoSpoofIp(aconf) || irccmp(aconf->info.name, "webirc."))
+	if (!IsConfDoSpoofWebchat(aconf))
 	{
 		/* XXX */
 		sendto_one(source_p, "NOTICE * :Not a CGI:IRC auth block");
@@ -114,7 +114,8 @@ mr_webirc(struct Client *client_p, struct Client *source_p, int parc, const char
 		sendto_one(source_p, "NOTICE * :CGI:IRC password incorrect");
 		return 0;
 	}
-
+	*aconf->info.name++;
+	user_metadata_add(client_p, "WEBIRCNAME", aconf->info.name, 1);
 
 	rb_strlcpy(source_p->sockhost, parv[4], sizeof(source_p->sockhost));
 

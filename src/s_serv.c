@@ -596,7 +596,7 @@ burst_TS6(struct Client *client_p)
 						use_id(target_p), target_p->user->suser);
 		}
 
-		DICTIONARY_FOREACH(md, &iter, target_p->user->metadata)
+		DICTIONARY_FOREACH(md, &iter, target_p->metadata)
 		{
 			sendto_one(client_p, ":%s ENCAP * METADATA ADD %s %s :%s",
 				   use_id(&me), use_id(target_p), md->name, md->value);
