@@ -2186,7 +2186,7 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 				      use_id(source_p), (long) chptr->channelts,
 				      chptr->chname);
 			struct Metadata *md;
-			md = channel_metadata_get(chptr, "FOUNDER");
+			md = channel_metadata_find(chptr, "FOUNDER");
 			if (md != NULL) {
 				if (!irccmp(source_p->user->suser, md->value)) flags |= CHFL_OWNER | CHFL_CHANOP;
 			}
