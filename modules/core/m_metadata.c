@@ -117,7 +117,7 @@ m_metadata(struct Client *client_p, struct Client *source_p, int parc, const cha
 	}
 
 	int propagate = 0;
-	if (parv[3][0] == '#')
+	if (parv[2][0] == '#')
 		propagate = 1;
 	if (!irccmp(parv[3], "NOREPEAT"))
 	{
