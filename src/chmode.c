@@ -533,6 +533,10 @@ int chk_access(long rlevel, struct Client *source_p, struct Channel *chptr,
 		*override = 1;
 		return 1;
 	}
+	struct membership *msptr;
+	if(is_founder((msptr = find_channel_membership(chptr, source_p)))) {
+		return 1;
+	}
 	
 	if(!(*errors & SM_ERR_NOOPS))
 		sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
