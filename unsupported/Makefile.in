@@ -28,6 +28,7 @@ CPPFLAGS	= ${INCLUDES} @CPPFLAGS@
 
 SRCS =                          \
   m_clearchan.c			\
+  m_founder.c	\
   make_override_immune.c	\
   sno_channeljoin.c
 
