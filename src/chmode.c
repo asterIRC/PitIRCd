@@ -2105,7 +2105,7 @@ struct ChannelMode chmode_table[256] =
   {chm_hidden,	MODE_NOOPERKICK },	/* M */
   {chm_nosuch,	0 },			/* N */
   {chm_nosuch,	0 },			/* O */
-  {chm_staff,	MODE_PERMANENT },	/* P */
+  {chm_simple,	MODE_PERMANENT },	/* P */
   {chm_simple,	MODE_DISFORWARD },	/* Q */
   {chm_nosuch,	0 },			/* R */
   {chm_nosuch,	0 },			/* S */
