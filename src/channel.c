@@ -2175,9 +2175,9 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 					     me.name, chptr->chname, modes);
 
 			sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
-				      ":%s SJOIN %ld %s %s :@%s",
+				      ":%s SJOIN %ld %s %s :%s@%s",
 				      me.id, (long) chptr->channelts,
-				      chptr->chname, modes, source_p->id);
+				      chptr->chname, modes, (flags & CHFL_OWNER)?"~":"", source_p->id);
 		}
 		else
 		{
