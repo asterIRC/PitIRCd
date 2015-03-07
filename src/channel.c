@@ -236,6 +236,14 @@ find_channel_status_whois(struct membership *msptr, int combine)
 
 	p = buffer;
 
+    if(is_founder(msptr))
+    {
+        if(!combine)
+            return "*";
+        *p++ = '*';
+        *p = '\0';
+		return buffer;
+    }
     if(is_owner(msptr))
     {
         if(!combine)
@@ -326,12 +334,41 @@ is_admin(struct membership *msptr)
 int
 is_owner(struct membership *msptr)
 {
+        struct Metadata *md;
+				md = channel_metadata_find(msptr->chptr, "FOUNDER");
         if(!ConfigChannel.use_owner)
                 return 0;
         if(is_chmode_q(msptr))
                 return 1;
+        if(md == NULL)
+                return 0;
+        if(irccmp(msptr->client_p->user->suser, md->value))
+                return 1;
         else
                 return 0;
+}
+
+/* is_owner()
+ * input    - membership to check for founder
+ * output   - 1 if the user is an admin, 0 if the user is not or owner
+ * is disabled
+ * side effects - 
+ *
+ */
+int
+is_founder(struct membership *msptr)
+{
+        struct Metadata *md;
+				md = channel_metadata_find(msptr->chptr, "FOUNDER");
+        if(!ConfigChannel.use_owner)
+                return 0;
+        if(is_chmode_q(msptr) && md == NULL)
+                return 1;
+        if(md == NULL)
+                return 0;
+        if(irccmp(msptr->client_p->user->suser, md->value))
+                return 1;
+        return 0;
 }
 
 /* is_any_op()
@@ -343,7 +380,7 @@ is_owner(struct membership *msptr)
 int
 is_any_op(struct membership *msptr)
 {
-	if(is_chanop(msptr) || is_halfop(msptr) || is_admin(msptr) || is_owner(msptr))
+	if(is_chanop(msptr) || is_halfop(msptr) || is_admin(msptr) || is_owner(msptr) || is_founder(msptr))
 		return 1;
 	else
 		return 0;
@@ -358,7 +395,7 @@ is_any_op(struct membership *msptr)
 int
 is_chanop_voiced(struct membership *msptr)
 {
-	if(is_chanop(msptr) || is_voiced(msptr) || is_halfop(msptr) || is_admin(msptr) || is_owner(msptr))
+	if(is_chanop(msptr) || is_voiced(msptr) || is_halfop(msptr) || is_admin(msptr) || is_owner(msptr) || is_founder(msptr))
 		return 1;
 	else
 		return 0;
@@ -375,6 +412,8 @@ is_chanop_voiced(struct membership *msptr)
  {
  	if(is_owner(msptr) && is_chanop(msptr))
  		return 1;
+ 	if(is_founder(msptr))
+ 		return 1;
  	else
  		return 0;
  }
@@ -389,6 +428,8 @@ is_chanop_voiced(struct membership *msptr)
  is_adminop(struct membership *msptr)
  {
  	if(is_admin(msptr) && is_chanop(msptr))
+ 		return 1;
+ 	if(is_founder(msptr))
  		return 1;
  	else
  		return 0;
@@ -413,6 +454,8 @@ can_kick_deop(struct membership *source, struct membership *target)
          *  -- Niichan
          */
 
+			 	if(is_founder(source))
+ 								return 1;
         if(is_owner(source))
                 return 1;
         if(is_admin(source) && is_admin(target))
@@ -969,6 +1012,10 @@ can_join(struct Client *source_p, struct Channel *chptr, char *key)
 	struct DictionaryIter iter;
 
 	s_assert(source_p->localClient != NULL);
+	if ((md = channel_metadata_find(chptr,"FOUNDER")) != NULL) {
+		if (!irccmp(md->value, source_p->user->suser))
+			return 0;
+	}
 
 	rb_sprintf(src_host, "%s!%s@%s", source_p->name, source_p->username, source_p->host);
 	rb_sprintf(src_iphost, "%s!%s@%s", source_p->name, source_p->username, source_p->sockhost);
@@ -1063,7 +1110,6 @@ can_join(struct Client *source_p, struct Channel *chptr, char *key)
 	moduledata.approved = 0;
 
 	call_hook(h_can_join, &moduledata);
-
 	return moduledata.approved;
 }
 

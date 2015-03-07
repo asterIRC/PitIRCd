@@ -248,6 +248,7 @@ extern const char *find_channel_status_whois(struct membership *msptr, int combi
 extern int is_halfop(struct membership *msptr);
 extern int is_admin(struct membership *msptr);
 extern int is_owner(struct membership *msptr);
+extern int is_founder(struct membership *msptr);
 
 extern int is_any_op(struct membership *msptr);
 extern int is_chanop_voiced(struct membership *msptr);

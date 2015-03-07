@@ -18,10 +18,11 @@
 #include "monitor.h"
 
 static int me_metadata(struct Client *, struct Client *, int, const char **);
+static int m_metadata(struct Client *, struct Client *, int, const char **);
 
 struct Message metadata_msgtab = {
 	"METADATA", 0, 0, 0, MFLG_SLOW,
-	{mg_ignore, mg_ignore, mg_ignore, mg_ignore, {me_metadata, 3}, mg_ignore}
+	{mg_ignore, {m_metadata, 3}, mg_ignore, mg_ignore, {me_metadata, 3}, mg_ignore}
 };
 
 mapi_clist_av1 metadata_clist[] = {
@@ -40,9 +41,9 @@ me_metadata(struct Client *client_p, struct Client *source_p, int parc, const ch
 		if((chptr = find_channel(parv[2])) == NULL)
 			return 0;
 
-		if(!strcmp(parv[1], "ADD") && parv[4] != NULL)
+		if(!irccmp(parv[1], "ADD") && parv[4] != NULL)
 			channel_metadata_add(chptr, parv[3], parv[4], 0);
-		if(!strcmp(parv[1], "DELETE") && parv[3] != NULL)
+		if(!irccmp(parv[1], "DELETE") && parv[3] != NULL)
 			channel_metadata_delete(chptr, parv[3], 0);
 	}
 
@@ -56,10 +57,90 @@ me_metadata(struct Client *client_p, struct Client *source_p, int parc, const ch
 		if(!target_p->user)
 			return 0;
 
-		if(!strcmp(parv[1], "ADD") && parv[4] != NULL)
+		if(!irccmp(parv[1], "ADD") && parv[4] != NULL)
 			user_metadata_add(target_p, parv[3], parv[4], 0);
-		if(!strcmp(parv[1], "DELETE") && parv[3] != NULL)
+		if(!irccmp(parv[1], "DELETE") && parv[3] != NULL)
 			user_metadata_delete(target_p, parv[3], 0);
 	}
+	return 0;
+}
+
+
+/*
+** m_metadata - User set channel metadata
+** I seriously fucking did this -- janicez
+*/
+static int
+m_metadata(struct Client *client_p, struct Client *source_p, int parc, const char *parv[])
+{
+	if(!check_channel_name(parv[2]))
+	{
+		sendto_one_numeric(source_p, ERR_BADCHANNAME, form_str(ERR_BADCHANNAME), parv[3]);
+		return 0;
+	}
+
+	struct Channel *chptr;
+	struct membership *msptr;
+	if((chptr = find_channel(parv[2])) == NULL)
+	{
+		sendto_one_numeric(source_p, ERR_NOSUCHCHANNEL,
+				   form_str(ERR_NOSUCHCHANNEL), parv[2]);
+		return 0;
+	}
+	struct Metadata *md;
+	if(!irccmp(parv[1], "FIND") && parv[3] != NULL) {
+		md = channel_metadata_find(chptr, parv[3]);
+		if (md != NULL)
+		{
+			sendto_one(source_p, ":%s 802 %s %s %s :%s", me.name, source_p->name, parv[2], md->name, md->value);
+			return 0;
+		} else {
+			sendto_one(source_p, ":%s 803 %s %s %s :Metadatum nonexistant", me.name, source_p->name, parv[2], parv[3]);
+			return 0;
+		}
+	}
+
+	// Uhhh.... rizight. I don't think this is gonna work (mumble mumble) -- janicez
+	if (!(msptr = find_channel_membership(chptr, source_p)))
+	{
+		sendto_one_numeric(source_p, ERR_NOTONCHANNEL,
+				   form_str(ERR_NOTONCHANNEL), parv[2]);
+		return 0;
+	}
+
+	// Yeah. No. --janicez
+	if (!is_any_op(msptr) && !IsOverride(source_p))
+	{
+		sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
+				me.name, source_p->name, parv[2]);
+		return 0;
+	}
+
+	int propagate = 0;
+	if (parv[3][0] == '#')
+		propagate = 1;
+	if (!irccmp(parv[3], "NOREPEAT"))
+	{
+		sendto_one(source_p, ":%s 801 %s :NOREPEAT modification prohibited -- used by IRCd", parv[2], parv[3]);
+		return 0;
+	}
+
+	if (parv[3][0] == 'K')
+	{
+		sendto_one(source_p, ":%s 801 %s :KICKNOREJOIN modification prohibited -- used by IRCd", parv[2], parv[3]);
+		return 0;
+	}
+
+	if (!irccmp(parv[3], "FOUNDER") && !is_founder(msptr))
+	{
+		sendto_one(source_p, ":%s 801 %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", parv[2], parv[3]);
+		return 0;
+	}
+
+	// And here we are. If the user isn't querying, but adding or deleting, set, and if the channel is global (#), propagate.
+	if(!irccmp(parv[1], "ADD") && parv[4] != NULL)
+		channel_metadata_add(chptr, parv[3], parv[4], propagate);
+	if(!irccmp(parv[1], "DELETE") && parv[3] != NULL)
+		channel_metadata_delete(chptr, parv[3], propagate);
 	return 0;
 }
