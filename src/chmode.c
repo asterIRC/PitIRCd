@@ -533,8 +533,8 @@ int chk_access(long rlevel, struct Client *source_p, struct Channel *chptr,
 		*override = 1;
 		return 1;
 	}
-	struct membership *msptr;
-	if(is_founder((msptr = find_channel_membership(chptr, source_p)))) {
+	struct membership *msptr = find_channel_membership(chptr, source_p);
+	if(is_founder(msptr)) {
 		return 1;
 	}
 	

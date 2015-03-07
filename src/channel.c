@@ -2181,10 +2181,20 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 		}
 		else
 		{
+			struct membership *foundersptr = find_channel_membership(source_p, chptr);
 			sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
 				      ":%s JOIN %ld %s +",
 				      use_id(source_p), (long) chptr->channelts,
 				      chptr->chname);
+			if (is_founder(foundersptr)) {
+				flags |= CHFL_OWNER | CHFL_CHANOP;
+				sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
+					      ":%s TMODE %ld %s +qo %s %s",
+					      use_id(&me), (long) chptr->channelts,
+					      chptr->chname, source_p->id, source_p->id);
+			sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +qo %s %s",
+					     me.name, chptr->chname, source_p->name, source_p->name);
+			}
 		}
 
 		del_invite(chptr, source_p);
