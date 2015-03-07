@@ -335,14 +335,9 @@ int
 is_owner(struct membership *msptr)
 {
         struct Metadata *md;
-				md = channel_metadata_find(msptr->chptr, "FOUNDER");
         if(!ConfigChannel.use_owner)
                 return 0;
         if(is_chmode_q(msptr))
-                return 1;
-        if(md == NULL)
-                return 0;
-        if(irccmp(msptr->client_p->user->suser, md->value))
                 return 1;
         else
                 return 0;
@@ -362,8 +357,6 @@ is_founder(struct membership *msptr)
 				md = channel_metadata_find(msptr->chptr, "FOUNDER");
         if(!ConfigChannel.use_owner)
                 return 0;
-        if(is_chmode_q(msptr) && md == NULL)
-                return 1;
         if(md == NULL)
                 return 0;
         if(irccmp(msptr->client_p->user->suser, md->value))

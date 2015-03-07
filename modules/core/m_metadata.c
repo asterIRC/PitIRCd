@@ -101,7 +101,7 @@ m_metadata(struct Client *client_p, struct Client *source_p, int parc, const cha
 	}
 
 	// Uhhh.... rizight. I don't think this is gonna work (mumble mumble) -- janicez
-	if (!(msptr = find_channel_membership(chptr, source_p)))
+	if ((msptr = find_channel_membership(chptr, source_p)) == NULL)
 	{
 		sendto_one_numeric(source_p, ERR_NOTONCHANNEL,
 				   form_str(ERR_NOTONCHANNEL), parv[2]);
@@ -116,31 +116,28 @@ m_metadata(struct Client *client_p, struct Client *source_p, int parc, const cha
 		return 0;
 	}
 
-	int propagate = 0;
-	if (parv[2][0] == '#')
-		propagate = 1;
 	if (!irccmp(parv[3], "NOREPEAT"))
 	{
-		sendto_one(source_p, ":%s 801 %s :NOREPEAT modification prohibited -- used by IRCd", parv[2], parv[3]);
+		sendto_one(source_p, ":%s 801 %s %s %s :NOREPEAT modification prohibited -- used by IRCd", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
 	}
 
 	if (parv[3][0] == 'K')
 	{
-		sendto_one(source_p, ":%s 801 %s :KICKNOREJOIN modification prohibited -- used by IRCd", parv[2], parv[3]);
+		sendto_one(source_p, ":%s 801 %s %s %s :KICKNOREJOIN modification prohibited -- used by IRCd", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
 	}
 
-	if (!irccmp(parv[3], "FOUNDER") && !is_founder(msptr))
+	if (!strcmp(parv[3], "FOUNDER") && !is_founder(msptr))
 	{
-		sendto_one(source_p, ":%s 801 %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", parv[2], parv[3]);
+		sendto_one(source_p, ":%s 801 %s %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
 	}
 
 	// And here we are. If the user isn't querying, but adding or deleting, set, and if the channel is global (#), propagate.
 	if(!irccmp(parv[1], "ADD") && parv[4] != NULL)
-		channel_metadata_add(chptr, parv[3], parv[4], propagate);
+		channel_metadata_add(chptr, parv[3], parv[4], 1);
 	if(!irccmp(parv[1], "DELETE") && parv[3] != NULL)
-		channel_metadata_delete(chptr, parv[3], propagate);
+		channel_metadata_delete(chptr, parv[3], 1);
 	return 0;
 }

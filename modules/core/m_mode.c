@@ -142,8 +142,11 @@ m_mode(struct Client *client_p, struct Client *source_p, int parc, const char *p
 			if(!((parc == 3) && (parv[2][0] == 'b') && (parv[2][1] == '\0')))
 				flood_endgrace(source_p);
 		}
+		if (is_founder(msptr))
+			set_channel_mode(client_p, source_p, chptr, NULL, parc - n, parv + n);
+		else
+			set_channel_mode(client_p, source_p, chptr, msptr, parc - n, parv + n);
 
-		set_channel_mode(client_p, source_p, chptr, msptr, parc - n, parv + n);
 	}
 
 	return 0;
