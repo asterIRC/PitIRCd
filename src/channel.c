@@ -2188,7 +2188,15 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
 			struct Metadata *md;
 			md = channel_metadata_find(chptr, "FOUNDER");
 			if (md != NULL) {
-				if (!irccmp(source_p->user->suser, md->value)) flags |= CHFL_OWNER | CHFL_CHANOP;
+				if (!irccmp(source_p->user->suser, md->value)) {
+					flags |= CHFL_OWNER | CHFL_CHANOP;
+					sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
+						      ":%s TMODE %ld %s +qo %s %s",
+						      use_id(&me), (long) chptr->channelts,
+						      chptr->chname, use_id(source_p), use_id(source_p));
+					sendto_channel_local(ALL_MEMBERS, chptr, ":%s MODE %s +qo %s %s",
+							     me.name, chptr->chname, source_p->name, source_p->name);
+				}
 			}
 		}
 
