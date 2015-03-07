@@ -85,7 +85,7 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 
 	if (!is_founder(msptr))
 	{
-		sendto_one(source_p, ":%s 801 %s %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
+		sendto_one(source_p, ":%s NOTICE %s :METADATA ERROR %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
 	}
 
