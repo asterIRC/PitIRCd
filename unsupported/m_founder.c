@@ -83,7 +83,8 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 		return 0;
 	}
 
-	if (!is_founder(msptr))
+	md = channel_metadata_find(chptr, "FOUNDER");
+	if (!is_founder(msptr) || (md == NULL && !is_owner(msptr)))
 	{
 		sendto_one(source_p, ":%s NOTICE %s :METADATA ERROR %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
@@ -94,5 +95,6 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 		channel_metadata_add(chptr, "FOUNDER", parv[3], 1);
 	if(!irccmp(parv[1], "DELETE"))
 		channel_metadata_delete(chptr, "FOUNDER", 1);
+	sendto_one(source_p, ":%s NOTICE %s :METADATA %s %s FOUNDER %s", me.name, source_p->name, parv[1], parv[2], parv[3]);
 	return 0;
 }
