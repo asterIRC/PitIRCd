@@ -361,7 +361,7 @@ is_founder(struct membership *msptr)
                 return 1;
         if(md == NULL)
                 return 0;
-        if(irccmp(md->value, msptr->client_p->user->suser))
+        if(!irccmp(md->value, msptr->client_p->user->suser))
                 return 1;
         return 0;
 }
