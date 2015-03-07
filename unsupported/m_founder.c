@@ -30,7 +30,7 @@ mapi_clist_av1 founder_clist[] = {
 	&founder_msgtab, NULL
 };
 
-DECLARE_MODULE_AV1(founder, NULL, NULL, founder_clist, NULL, NULL, "$Revision$");
+DECLARE_MODULE_AV1(founder, NULL, NULL, founder_clist, NULL, NULL, "PitIRCd1.2b1");
 
 
 /*
@@ -42,7 +42,7 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 {
 	if(!check_channel_name(parv[2]))
 	{
-		sendto_one_numeric(source_p, ERR_BADCHANNAME, form_str(ERR_BADCHANNAME), parv[3]);
+		sendto_one_numeric(client_p, ERR_BADCHANNAME, form_str(ERR_BADCHANNAME), parv[2]);
 		return 0;
 	}
 
@@ -50,7 +50,7 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 	struct membership *msptr;
 	if((chptr = find_channel(parv[2])) == NULL)
 	{
-		sendto_one_numeric(source_p, ERR_NOSUCHCHANNEL,
+		sendto_one_numeric(client_p, ERR_NOSUCHCHANNEL,
 				   form_str(ERR_NOSUCHCHANNEL), parv[2]);
 		return 0;
 	}
@@ -59,18 +59,19 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 		md = channel_metadata_find(chptr, "FOUNDER");
 		if (md != NULL)
 		{
-			sendto_one(source_p, ":%s NOTICE %s :METADATA %s %s :%s", me.name, source_p->name, parv[2], md->name, md->value);
+			sendto_one(client_p, ":%s NOTICE %s :METADATA %s %s :%s", me.name, source_p->name, parv[2], md->name, md->value);
 			return 0;
 		} else {
-			sendto_one(source_p, ":%s NOTICE %s :METADATA %s FOUNDER :Metadatum nonexistant", me.name, source_p->name, parv[2]);
+			sendto_one(client_p, ":%s NOTICE %s :METADATA %s FOUNDER :Metadatum nonexistant", me.name, source_p->name, parv[2]);
 			return 0;
 		}
+		sendto_one(client_p, ":%s NOTICE %s :METADATA %s BUG ENCOUNTERED, REPORT TO PITIRCD DEVELOPERS", me.name, source_p->name, parv[2]);
 	}
 
 	// Uhhh.... rizight. I don't think this is gonna work (mumble mumble) -- janicez
 	if ((msptr = find_channel_membership(chptr, source_p)) == NULL)
 	{
-		sendto_one_numeric(source_p, ERR_NOTONCHANNEL,
+		sendto_one_numeric(client_p, ERR_NOTONCHANNEL,
 				   form_str(ERR_NOTONCHANNEL), parv[2]);
 		return 0;
 	}
@@ -78,7 +79,7 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 	// Yeah. No. --janicez
 	if (!is_any_op(msptr) && !IsOverride(source_p))
 	{
-		sendto_one(source_p, form_str(ERR_CHANOPRIVSNEEDED),
+		sendto_one(client_p, form_str(ERR_CHANOPRIVSNEEDED),
 				me.name, source_p->name, parv[2]);
 		return 0;
 	}
@@ -86,7 +87,7 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 	md = channel_metadata_find(chptr, "FOUNDER");
 	if (!is_founder(msptr) || (md == NULL && !is_owner(msptr)))
 	{
-		sendto_one(source_p, ":%s NOTICE %s :METADATA ERROR %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
+		sendto_one(client_p, ":%s NOTICE %s :METADATA ERROR %s %s :FOUNDER modification prohibited -- you are not owner, or FOUNDER is already set and you are not founder.", me.name, source_p->name, parv[2], parv[3]);
 		return 0;
 	}
 
@@ -95,6 +96,6 @@ mc_founder(struct Client *client_p, struct Client *source_p, int parc, const cha
 		channel_metadata_add(chptr, "FOUNDER", parv[3], 1);
 	if(!irccmp(parv[1], "DELETE"))
 		channel_metadata_delete(chptr, "FOUNDER", 1);
-	sendto_one(source_p, ":%s NOTICE %s :METADATA %s %s FOUNDER %s", me.name, source_p->name, parv[1], parv[2], parv[3]);
+	sendto_one(client_p, ":%s NOTICE %s :METADATA %s %s FOUNDER %s", me.name, source_p->name, parv[1], parv[2], parv[3]);
 	return 0;
 }
