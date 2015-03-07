@@ -22,7 +22,7 @@
 static int mc_founder(struct Client *, struct Client *, int, const char **);
 
 struct Message founder_msgtab = {
-	"METADATA", 0, 0, 0, MFLG_SLOW,
+	"FOUNDER", 0, 0, 0, MFLG_SLOW,
 	{mg_ignore, {mc_founder, 2}, mg_ignore, mg_ignore, mg_ignore, mg_ignore}
 };
 
