@@ -38,7 +38,7 @@ DECLARE_MODULE_AV1(founder, NULL, NULL, founder_clist, NULL, NULL, "$Revision$")
 ** I seriously fucking did this -- janicez
 */
 static int
-m_metadata(struct Client *client_p, struct Client *source_p, int parc, const char *parv[])
+mc_founder(struct Client *client_p, struct Client *source_p, int parc, const char *parv[])
 {
 	if(!check_channel_name(parv[2]))
 	{
@@ -62,7 +62,7 @@ m_metadata(struct Client *client_p, struct Client *source_p, int parc, const cha
 			sendto_one(source_p, ":%s NOTICE %s :METADATA %s %s :%s", me.name, source_p->name, parv[2], md->name, md->value);
 			return 0;
 		} else {
-			sendto_one(source_p, ":%s NOTICE %s :METADATA %s FOUNDER :Metadatum nonexistant", me.name, source_p->name, parv[2], parv[3]);
+			sendto_one(source_p, ":%s NOTICE %s :METADATA %s FOUNDER :Metadatum nonexistant", me.name, source_p->name, parv[2]);
 			return 0;
 		}
 	}
