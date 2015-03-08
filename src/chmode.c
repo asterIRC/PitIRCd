@@ -709,7 +709,6 @@ chm_hidden(struct Client *source_p, struct Channel *chptr,
 					"+%c set on [%s] by %s!%s@%s",
 					c, chptr->chname, source_p->name, source_p->username, source_p->host);
 
-			if(*chptr->chname != '&')
 				sendto_server(NULL, NULL, NOCAPS, NOCAPS, 
 					":%s WALLOPS :+%c set on [%s] by %s!%s@%s",
 					me.name, c, chptr->chname, source_p->name, source_p->username,
@@ -739,7 +738,6 @@ chm_hidden(struct Client *source_p, struct Channel *chptr,
 					"+%c unset from [%s] by %s!%s@%s",
 					c, chptr->chname, source_p->name, source_p->username, source_p->host);
 
-			if(*chptr->chname != '&')
 				sendto_server(NULL, NULL, NOCAPS, NOCAPS, 
 					":%s WALLOPS :+%c unset from [%s] by %s!%s@%s",
 					me.name, c, chptr->chname, source_p->name, source_p->username,
@@ -1888,12 +1886,6 @@ chm_forward(struct Client *source_p, struct Channel *chptr,
 			return;
 		}
 		/* don't forward to inconsistent target -- jilles */
-		if(chptr->chname[0] == '#' && forward[0] == '&')
-		{
-			sendto_one_numeric(source_p, ERR_BADCHANNAME,
-					   form_str(ERR_BADCHANNAME), forward);
-			return;
-		}
 		if(MyClient(source_p) && (targptr = find_channel(forward)) == NULL)
 		{
 			sendto_one_numeric(source_p, ERR_NOSUCHCHANNEL,
