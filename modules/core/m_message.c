@@ -390,7 +390,7 @@ build_target_list(int p_or_n, const char *command, struct Client *client_p,
 			continue;
 		}
 
-		if(IsServer(client_p) && *nick == '=' && IsChannelName(*nick[1]))
+		if(IsServer(client_p) && *nick == '=' && IsChannelName(nick[1]))
 		{
 			nick++;
 			if((chptr = find_channel(nick)) != NULL)
