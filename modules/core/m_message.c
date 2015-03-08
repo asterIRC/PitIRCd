@@ -390,30 +390,33 @@ build_target_list(int p_or_n, const char *command, struct Client *client_p,
 			continue;
 		}
 
-		if(IsServer(client_p) && *nick == '=' && IsChannelName(nick[1]))
+		if(IsServer(client_p) && *nick == '=')
 		{
 			nick++;
-			if((chptr = find_channel(nick)) != NULL)
-			{
-				if(!duplicate_ptr(chptr))
+			if (!IsChannelName(nick)) {
+			} {
+				if((chptr = find_channel(nick)) != NULL)
 				{
-					if(ntargets >= ConfigFileEntry.max_targets)
+					if(!duplicate_ptr(chptr))
 					{
-						sendto_one(source_p, form_str(ERR_TOOMANYTARGETS),
-							   me.name, source_p->name, nick);
-						return (1);
+						if(ntargets >= ConfigFileEntry.max_targets)
+						{
+							sendto_one(source_p, form_str(ERR_TOOMANYTARGETS),
+								   me.name, source_p->name, nick);
+							return (1);
+						}
+						targets[ntargets].ptr = (void *) chptr;
+						targets[ntargets++].type = ENTITY_CHANNEL_OPMOD;
 					}
-					targets[ntargets].ptr = (void *) chptr;
-					targets[ntargets++].type = ENTITY_CHANNEL_OPMOD;
 				}
-			}
 
 			/* non existant channel */
-			else if(p_or_n != NOTICE)
-				sendto_one_numeric(source_p, ERR_NOSUCHNICK,
-						   form_str(ERR_NOSUCHNICK), nick);
+				else if(p_or_n != NOTICE)
+					sendto_one_numeric(source_p, ERR_NOSUCHNICK,
+							   form_str(ERR_NOSUCHNICK), nick);	
 
-			continue;
+				continue;
+			}
 		}
 
 		if(strchr(nick, '@') || (IsOper(source_p) && (*nick == '$')))
