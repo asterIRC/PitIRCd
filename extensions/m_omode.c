@@ -113,6 +113,7 @@ mo_omode(struct Client *client_p, struct Client *source_p, int parc, const char 
 	ilog(L_MAIN, "OMODE called for [%s] [%s] by %s",
 	     parv[1], params, get_oper_name(source_p));
 
+	if(*chptr->chname != '&')
 		sendto_server(NULL, NULL, NOCAPS, NOCAPS, 
 			      ":%s WALLOPS :OMODE called for [%s] [%s] by %s!%s@%s",
 			      me.name, parv[1], params, source_p->name, source_p->username,
