@@ -151,9 +151,6 @@ ms_join(struct Client *client_p, struct Client *source_p, int parc, const char *
 		return 0;
 
 	/* joins for local channels cant happen. */
-	if(parv[2][0] == '&')
-		return 0;
-
 	mbuf = modebuf;
 	ombuf = omodebuf;
 	mode.key[0] = mode.forward[0] = '\0';
@@ -288,9 +285,6 @@ ms_sjoin(struct Client *client_p, struct Client *source_p, int parc, const char 
 		return 0;
 
 	/* SJOIN's for local channels can't happen. */
-	if(*parv[2] == '&')
-		return 0;
-
 	omodebuf[0] = modebuf[0] = parabuf[0] = mode.key[0] = mode.forward[0] = '\0';
 	pargs = mode.mode = mode.limit = mode.join_num = mode.join_time = 0;
 
