@@ -615,9 +615,6 @@ burst_TS6(struct Client *client_p)
 	{
 		chptr = ptr->data;
 
-		if(*chptr->chname != '#')
-			continue;
-
 		cur_len = mlen = rb_sprintf(buf, ":%s SJOIN %ld %s %s :", me.id,
 				(long) chptr->channelts, chptr->chname,
 				channel_modes(chptr, client_p));

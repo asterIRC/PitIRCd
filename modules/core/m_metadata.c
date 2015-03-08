@@ -34,7 +34,7 @@ DECLARE_MODULE_AV1(metadata, NULL, NULL, metadata_clist, NULL, NULL, "$Revision$
 static int
 me_metadata(struct Client *client_p, struct Client *source_p, int parc, const char *parv[])
 {
-	if(parv[2][0] == '#')
+	if(IsChannelName(parv[2]))
 	{
 		struct Channel *chptr;
 
