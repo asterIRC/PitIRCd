@@ -1139,16 +1139,16 @@ conf_set_auth_spoof(void *data)
 		*p = '\0';
 		host = p+1;
 
-		if(!valid_username(host))
+		if(!valid_hostname(host) && !valid_username(host))
 		{
 			conf_report_error("Warning -- Invalid WebIRC spoof");
 			return;
 		}
 
 		/* this must be restored! */
-		*p = '&';
+		*p++;
 		rb_free(yy_aconf->info.name);
-		yy_aconf->info.name = rb_strdup(data);
+		yy_aconf->info.name = rb_strdup(host);
 		yy_aconf->flags |= CONF_FLAGS_SPOOF_WEBCHAT;
 		return;
 	}
