@@ -23,6 +23,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: win32.c 26092 2008-09-19 15:13:52Z androsyn $
  */
 
 #include <libratbox_config.h>
@@ -156,7 +157,7 @@ rb_kill(int pid, int sig)
 	HANDLE hProcess;
 	int ret = -1;
 	hProcess = OpenProcess(PROCESS_ALL_ACCESS, TRUE, pid);
-	
+
 	if(hProcess)
 	{
 		switch (sig)
@@ -187,7 +188,7 @@ rb_kill(int pid, int sig)
  WSAPROTOCOL_INFO * count
  size_t datasize
  data
- 
+
  */
 
 static int
@@ -476,7 +477,7 @@ rb_select_win32(long delay)
 	if(has_set_timer == 0)
 	{
 		/* XXX should probably have this handle all the events
-		 * instead of busy looping 
+		 * instead of busy looping
 		 */
 		SetTimer(hwnd, 0, delay, NULL);
 		has_set_timer = 1;

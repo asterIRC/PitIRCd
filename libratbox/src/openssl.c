@@ -14,12 +14,13 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: commio.c 24808 2008-01-02 08:17:05Z androsyn $
  */
 
 #include <libratbox_config.h>
@@ -311,8 +312,30 @@ rb_init_ssl(void)
 		ret = 0;
 	}
 	/* Disable SSLv2, make the client use our settings */
-	SSL_CTX_set_options(ssl_server_ctx, SSL_OP_NO_SSLv2 | SSL_OP_CIPHER_SERVER_PREFERENCE);
+	SSL_CTX_set_options(ssl_server_ctx, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_CIPHER_SERVER_PREFERENCE
+#ifdef SSL_OP_SINGLE_DH_USE
+			| SSL_OP_SINGLE_DH_USE
+#endif
+#ifdef SSL_OP_NO_TICKET
+			| SSL_OP_NO_TICKET
+#endif
+			);
 	SSL_CTX_set_verify(ssl_server_ctx, SSL_VERIFY_PEER | SSL_VERIFY_CLIENT_ONCE, verify_accept_all_cb);
+	SSL_CTX_set_session_cache_mode(ssl_server_ctx, SSL_SESS_CACHE_OFF);
+	SSL_CTX_set_cipher_list(ssl_server_ctx, "EECDH+HIGH:EDH+HIGH:HIGH:!aNULL");
+
+	/* Set ECDHE on OpenSSL 1.00+, but make sure it's actually available because redhat are dicks
+	   and bastardise their OpenSSL for stupid reasons... */
+	#if (OPENSSL_VERSION_NUMBER >= 0x10000000) && defined(NID_secp384r1)
+		EC_KEY *key = EC_KEY_new_by_curve_name(NID_secp384r1);
+		if (key) {
+			SSL_CTX_set_tmp_ecdh(ssl_server_ctx, key);
+			EC_KEY_free(key);
+		}
+#ifdef SSL_OP_SINGLE_ECDH_USE
+		SSL_CTX_set_options(ssl_server_ctx, SSL_OP_SINGLE_ECDH_USE);
+#endif
+	#endif
 
 	ssl_client_ctx = SSL_CTX_new(TLSv1_client_method());
 
@@ -322,6 +345,11 @@ rb_init_ssl(void)
 			   get_ssl_error(ERR_get_error()));
 		ret = 0;
 	}
+
+#ifdef SSL_OP_NO_TICKET
+	SSL_CTX_set_options(ssl_client_ctx, SSL_OP_NO_TICKET);
+#endif
+
 	return ret;
 }
 
@@ -575,10 +603,6 @@ rb_init_prng(const char *path, prng_seed_t seed_type)
 
 	switch (seed_type)
 	{
-	case RB_PRNG_EGD:
-		if(RAND_egd(path) == -1)
-			return -1;
-		break;
 	case RB_PRNG_FILE:
 		if(RAND_load_file(path, -1) == -1)
 			return -1;
@@ -661,7 +685,7 @@ rb_supports_ssl(void)
 void
 rb_get_ssl_info(char *buf, size_t len)
 {
-	rb_snprintf(buf, len, "Using SSL: %s compiled: 0x%lx, library 0x%lx", 
+	rb_snprintf(buf, len, "Using SSL: %s compiled: 0x%lx, library 0x%lx",
 		    SSLeay_version(SSLEAY_VERSION),
 		    (long)OPENSSL_VERSION_NUMBER, SSLeay());
 }

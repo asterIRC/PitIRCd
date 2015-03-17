@@ -1,8 +1,9 @@
 /*
+ * $Id: patricia.h 23020 2006-09-01 18:20:19Z androsyn $
  * Dave Plonka <plonka@doit.wisc.edu>
  *
  * This product includes software developed by the University of Michigan,
- * Merit Network, Inc., and their contributors. 
+ * Merit Network, Inc., and their contributors.
  *
  * This file had been called "radix.h" in the MRT sources.
  *

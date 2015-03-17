@@ -23,6 +23,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: sigio.c 26092 2008-09-19 15:13:52Z androsyn $
  */
 
 #ifndef _GNU_SOURCE
@@ -120,7 +121,7 @@ resize_pollarray(int fd)
 
 /*
  * void setup_sigio_fd(int fd)
- * 
+ *
  * Input: File descriptor
  * Output: None
  * Side Effect: Sets the FD up for SIGIO

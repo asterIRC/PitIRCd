@@ -21,6 +21,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: commio.c 26254 2008-12-10 04:04:38Z androsyn $
  */
 #include <libratbox_config.h>
 #include <ratbox_lib.h>
@@ -58,7 +59,8 @@ static struct ev_entry *rb_timeout_ev;
 static const char *rb_err_str[] = { "Comm OK", "Error during bind()",
 	"Error during DNS lookup", "connect timeout",
 	"Error during connect()",
-	"Comm Error"
+	"Comm Error",
+	"Error with SSL"
 };
 
 /* Highest FD and number of open FDs .. */
@@ -197,7 +199,7 @@ rb_getmaxconnect(void)
 
 /*
  * set_sock_buffers - set send and receive buffers for socket
- * 
+ *
  * inputs	- fd file descriptor
  * 		- size to set
  * output       - returns true (1) if successful, false (0) otherwise
@@ -216,7 +218,7 @@ rb_set_buffers(rb_fde_t *F, int size)
 }
 
 /*
- * set_non_blocking - Set the client connection into non-blocking mode. 
+ * set_non_blocking - Set the client connection into non-blocking mode.
  *
  * inputs	- fd to set into non blocking mode
  * output	- 1 if successful 0 if not
@@ -694,7 +696,7 @@ rb_socket(int family, int sock_type, int proto, const char *note)
 		return NULL;	/* errno will be passed through, yay.. */
 
 #if defined(RB_IPV6) && defined(IPV6_V6ONLY)
-	/* 
+	/*
 	 * Make sure we can take both IPv4 and IPv6 connections
 	 * on an AF_INET6 socket
 	 */
@@ -765,13 +767,12 @@ rb_listen(rb_fde_t *F, int backlog, int defer_accept)
 	int result;
 
 	F->type = RB_FD_SOCKET | RB_FD_LISTEN;
-
 	result = listen(F->fd, backlog);
 
 #ifdef TCP_DEFER_ACCEPT
 	if (defer_accept && !result)
 	{
-		setsockopt(F->fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &backlog, sizeof(int));
+		(void)setsockopt(F->fd, IPPROTO_TCP, TCP_DEFER_ACCEPT, &backlog, sizeof(int));
 	}
 #endif
 #ifdef SO_ACCEPTFILTER
@@ -782,7 +783,7 @@ rb_listen(rb_fde_t *F, int backlog, int defer_accept)
 		memset(&afa, '\0', sizeof afa);
 		rb_strlcpy(afa.af_name, "dataready", sizeof afa.af_name);
 		(void)setsockopt(F->fd, SOL_SOCKET, SO_ACCEPTFILTER, &afa,
-		                sizeof afa);
+				sizeof afa);
 	}
 #endif
 
@@ -990,8 +991,8 @@ rb_read(rb_fde_t *F, void *buf, int count)
 	if(F == NULL)
 		return 0;
 
-	/* This needs to be *before* RB_FD_SOCKET otherwise you'll process 
-	 * an SSL socket as a regular socket 
+	/* This needs to be *before* RB_FD_SOCKET otherwise you'll process
+	 * an SSL socket as a regular socket
 	 */
 #ifdef HAVE_SSL
 	if(F->type & RB_FD_SSL)
@@ -1103,7 +1104,7 @@ rb_writev(rb_fde_t *F, struct rb_iovec * vector, int count)
 #endif
 
 
-/* 
+/*
  * From: Thomas Helvey <tomh@inxpress.net>
  */
 static const char *IpQuadTab[] = {
@@ -2221,7 +2222,7 @@ rb_send_fd_buf(rb_fde_t *xF, rb_fde_t **F, int count, void *data, size_t datasiz
 	char empty = '0';
 	char *buf;
 
-	memset(&msg, 0, sizeof(msg));
+	memset(&msg, 0, sizeof msg);
 	if(datasize == 0)
 	{
 		iov[0].iov_base = &empty;

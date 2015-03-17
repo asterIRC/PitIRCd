@@ -20,6 +20,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: tools.c 26170 2008-10-26 20:59:07Z androsyn $
  *
  *  Here is the original header:
  *
@@ -69,7 +70,7 @@ rb_make_rb_dlink_node(void)
  *
  * inputs	- pointer to rb_dlink_node
  * output	- NONE
- * side effects	- free given rb_dlink_node 
+ * side effects	- free given rb_dlink_node
  */
 void
 rb_free_rb_dlink_node(rb_dlink_node *ptr)
@@ -190,7 +191,7 @@ rb_strnlen(const char *s, size_t count)
 {
 	const char *sc;
 	for(sc = s; count-- && *sc != '\0'; ++sc)
-		;;
+		;
 	return sc - s;
 }
 #else
@@ -205,7 +206,7 @@ rb_strnlen(const char *s, size_t count)
  *
  * input        -
  * output       -
- * side effects -  
+ * side effects -
  */
 char *
 rb_basename(const char *path)
@@ -232,11 +233,11 @@ rb_dirname (const char *path)
 	if(s == NULL)
 	{
 		return rb_strdup(".");
-	}	
+	}
 
 	/* remove extra slashes */
 	while(s > path && *s == '/')
 		--s;
 
-	return rb_strndup(path, ((uintptr_t)s - (uintptr_t)path) + 2); 
+	return rb_strndup(path, ((uintptr_t)s - (uintptr_t)path) + 2);
 }

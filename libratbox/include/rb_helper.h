@@ -1,7 +1,7 @@
 /*
  *  ircd-ratbox: A slightly useful ircd
  *  helper.h: Starts and deals with ircd helpers
- *  
+ *
  *  Copyright (C) 2006 Aaron Sethman <androsyn@ratbox.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,6 +19,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  *  USA
  *
+ *  $Id: rb_helper.h 26092 2008-09-19 15:13:52Z androsyn $
  */
 
 #ifndef RB_LIB_H
